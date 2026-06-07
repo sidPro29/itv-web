@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary-color: #007aff;
+  --bg-color: #050505;
+  --surface-color: rgba(20, 20, 20, 0.7);
+  --glass-bg: rgba(25, 25, 25, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s var(--transition-smooth) forwards;
+}
+
+/* App Container */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shimmer Animation & Skeleton Loaders */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #121212 25%, #1c1c1c 50%, #121212 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Skeleton layouts */
+.skeleton-hero {
+  height: 85vh;
+  min-height: 600px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 4rem;
+  overflow: hidden;
+  background: #080808;
+}
+
+.skeleton-hero-content {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+
+.skeleton-badge {
+  width: 80px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 4.5rem;
+  border-radius: 8px;
+}
+
+.skeleton-desc {
+  width: 100%;
+  height: 4.5rem;
+  border-radius: 6px;
+}
+
+.skeleton-btn-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.skeleton-btn {
+  width: 140px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.skeleton-row-container {
+  margin-bottom: 3rem;
+}
+
+.skeleton-row-title {
+  width: 200px;
+  height: 2rem;
+  margin-bottom: 1.25rem;
+  border-radius: 6px;
+}
+
+.skeleton-row-grid {
+  display: flex;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+.skeleton-card {
+  min-width: 280px;
+  width: 280px;
+  height: 244px;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  background: var(--glass-bg);
+}
+
+.skeleton-card-img {
+  width: 100%;
+  height: 160px;
+}
+
+.skeleton-card-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeleton-card-title {
+  width: 70%;
+  height: 1.2rem;
+  border-radius: 4px;
+}
+
+.skeleton-card-meta {
+  width: 40%;
+  height: 0.9rem;
+  border-radius: 3px;
+}
+
+/* Animations and Premium transitions */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+

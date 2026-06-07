@@ -1,0 +1,692 @@
+.profile-page-container {
+  min-height: 100vh;
+  background-color: #07070a;
+  color: #fff;
+  padding: 8rem 0 4rem;
+  position: relative;
+}
+
+.profile-ambient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(0, 122, 255, 0.05) 0%, rgba(0, 0, 0, 0) 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.profile-content-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* TOP USER INFO BANNER CARD */
+.profile-info-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2.5rem;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  margin-bottom: 2.5rem;
+}
+
+.banner-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.banner-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a0a5b5;
+}
+
+.banner-user-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.banner-user-email {
+  font-size: 0.95rem;
+  color: #8c8f9c;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.banner-plan-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plan-indicator-dot {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.plan-indicator-dot.active {
+  color: #30d158; /* Green */
+  text-shadow: 0 0 8px rgba(48, 209, 88, 0.5);
+}
+
+.plan-indicator-dot.inactive {
+  color: #ffd60a; /* Yellow/Orange */
+}
+
+.plan-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #30d158;
+}
+
+.edit-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.edit-profile-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* BOTTOM TABBED NAVIGATION & DYNAMIC CONTENT */
+.profile-bottom-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 3.5rem;
+  align-items: start;
+  /* CRITICAL: allow right column to shrink so overflow-x scroll works */
+  min-width: 0;
+}
+
+/* Sidebar Tab buttons */
+.profile-sidebar-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebar-tab-btn {
+  width: 100%;
+  text-align: left;
+  padding: 1rem 1.5rem;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: #8c8f9c;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-tab-btn.active {
+  background: #007aff;
+  color: #fff;
+  border-color: #007aff;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}
+
+.logout-tab-btn {
+  margin-top: 1.5rem;
+}
+
+.logout-tab-btn:hover {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+  border-color: rgba(255, 69, 58, 0.2);
+}
+
+/* Tab Dynamic Content Area */
+.profile-tab-content-area {
+  min-height: 400px;
+  min-width: 0;          /* CRITICAL: prevents grid blowout */
+}
+
+.tab-pane {
+  min-width: 0;
+}
+
+
+.tab-pane-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  /* Reduced space between title and the card stack below */
+  margin-bottom: 0.8rem;
+}
+
+/* Contact Us title sits closer to its subtitle — 50% of normal margin */
+.tab-pane-title.contact-title {
+  margin-bottom: 0.4rem;
+}
+
+.contact-subtitle {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #8c8f9c;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   CARD SIZES used inside ScrollableRow
+   (ScrollableRow itself handles the flex track & scroll)
+   ============================================================ */
+
+/* Asset cards (Watchlist / Playlist / Liked) */
+.profile-media-row-card {
+  width: 260px;
+  flex: 0 0 260px;
+}
+
+.profile-media-row-card .card-image-wrapper {
+  height: 155px;
+  overflow: hidden;
+  position: relative;
+  background: #1a1a2e;
+}
+
+.profile-media-row-card .card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.purchase-card {
+  width: 260px;
+  flex: 0 0 260px;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+
+.purchase-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Top accent bar — color shows status */
+.purchase-card-accent {
+  height: 6px;
+  width: 100%;
+}
+.purchase-card-accent.succeeded { background: linear-gradient(90deg, #30d158, #00a86b); }
+.purchase-card-accent.pending   { background: linear-gradient(90deg, #ffd60a, #ff9f0a); }
+.purchase-card-accent.failed    { background: linear-gradient(90deg, #ff453a, #c0392b); }
+
+.purchase-card-body {
+  padding: 1.2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.purchase-card-plan {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.purchase-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.purchase-card-label {
+  font-size: 0.75rem;
+  color: #5c5f6a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.purchase-card-value {
+  font-size: 0.85rem;
+  color: #c0c3cc;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all;
+}
+
+.purchase-card-amount {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.purchase-card-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+}
+.purchase-card-status.succeeded {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+}
+.purchase-card-status.pending {
+  background: rgba(255, 214, 10, 0.15);
+  color: #ffd60a;
+}
+.purchase-card-status.failed {
+  background: rgba(255, 69, 58, 0.15);
+  color: #ff453a;
+}
+
+.purchase-card-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 0.25rem 0;
+}
+
+.purchase-card-tx {
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #5c5f6a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   CONTACT CARDS — same dimensions as asset cards
+   ============================================================ */
+.contact-card-row {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+.contact-card-row::-webkit-scrollbar { display: none; }
+
+.contact-method-card {
+  width: 260px;
+  flex: 0 0 260px;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-method-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Top coloured band (same height as card image area) */
+.contact-card-banner {
+  height: 155px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-banner {
+  background: linear-gradient(135deg, rgba(160,122,255,0.18) 0%, rgba(90,60,180,0.12) 100%);
+}
+.phone-banner {
+  background: linear-gradient(135deg, rgba(255,59,48,0.18) 0%, rgba(180,30,30,0.12) 100%);
+}
+
+.contact-icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email-circle {
+  background: rgba(160, 122, 255, 0.15);
+  border: 1px solid rgba(160, 122, 255, 0.35);
+}
+
+.phone-circle {
+  background: rgba(255, 59, 48, 0.15);
+  border: 1px solid rgba(255, 59, 48, 0.35);
+}
+
+.contact-card-info {
+  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.contact-method-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.contact-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.contact-link:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+.email-link {
+  color: #a07aff;
+}
+
+.phone-link {
+  color: #ff3b30;
+}
+
+
+.card-remove-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ff453a;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+.card-remove-btn:hover {
+  background: #ff453a;
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.tab-empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tab-empty-state p {
+  color: #8c8f9c;
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
+}
+
+
+/* EDIT PROFILE MODAL */
+.edit-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.edit-modal-card {
+  width: 90%;
+  max-width: 500px;
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+}
+
+.modal-header h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.close-modal-btn {
+  background: transparent;
+  border: none;
+  color: #8c8f9c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal-btn:hover {
+  color: #fff;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.save-success-toast {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  right: 2rem;
+  background: #30d158;
+  color: #000;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.3);
+}
+
+/* Loading state */
+.profile-loading-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #050505;
+  color: #fff;
+}
+
+/* Error Screen */
+.profile-error-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #050505;
+  padding: 2rem;
+}
+
+/* RESPONSIVE LAYOUTS */
+@media (max-width: 1024px) {
+  .profile-bottom-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
+  .profile-sidebar-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .sidebar-tab-btn {
+    width: auto;
+    flex: 1 0 auto;
+    padding: 0.8rem 1.2rem;
+  }
+  
+  .logout-tab-btn {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-container {
+    padding: 6rem 1rem 2rem;
+  }
+  
+  .profile-content-wrapper {
+    padding: 0;
+  }
+  
+  .profile-info-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .edit-profile-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .contact-methods-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.purchase-card.active-purchase {
+  border-color: rgba(48, 209, 88, 0.3);
+  box-shadow: 0 4px 20px rgba(48, 209, 88, 0.1);
+}
+
+.purchase-card-accent.active {
+  background: linear-gradient(90deg, #30d158, #00a86b);
+}
+
+.purchase-card-status.active {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+}
+
+.purchase-card-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.active-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(48, 209, 88, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(48, 209, 88, 0.2);
+}
+
+.active-text {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #30d158;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.purchase-card-actions {
+  margin-top: 0.75rem;
+}
+
+.download-itinerary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.download-itinerary-btn:hover {
+  background: #007aff;
+  border-color: #007aff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
+}
+

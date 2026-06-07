@@ -1,0 +1,329 @@
+/* COOKIE CONSENT STYLING SHEET */
+
+/* 1. Cookie Banner (Bottom Floater) */
+.cookie-banner {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  max-width: 500px;
+  width: calc(100% - 4rem);
+  padding: 1.5rem;
+  z-index: 9999;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cookie-banner-content p {
+  color: #b8bac2;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Base button properties */
+.cookie-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.cookie-btn.btn-text {
+  background: none;
+  color: #a0a3b0;
+}
+
+.cookie-btn.btn-text:hover {
+  color: #fff;
+}
+
+.cookie-btn.btn-reject {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cookie-btn.btn-reject:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cookie-btn.btn-accept {
+  background: #007aff;
+  color: #fff;
+}
+
+.cookie-btn.btn-accept:hover {
+  background: #0066d6;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+}
+
+/* 2. Cookie Preferences Modal */
+.cookie-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cookie-modal {
+  width: 90%;
+  max-width: 640px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 15, 15, 0.95);
+  padding: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.cookie-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cookie-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.cookie-modal-close {
+  background: none;
+  border: none;
+  color: #8c8f9c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.cookie-modal-close:hover {
+  color: #fff;
+}
+
+.cookie-modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cookie-modal-desc {
+  color: #b8bac2;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.cookie-modal-subdesc {
+  color: #8c8f9c;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.cookie-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.cookie-cat-item {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.01);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.cookie-cat-item:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cookie-cat-item.expanded {
+  border-color: rgba(0, 122, 255, 0.2);
+}
+
+.cookie-cat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+}
+
+.cookie-cat-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.cookie-status-always {
+  color: #30d158;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cookie-cat-content {
+  padding: 0 1.25rem 1.25rem 2.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 1rem;
+}
+
+.cookie-cat-content p {
+  color: #8c8f9c;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Toggle Switch Styles */
+.cookie-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+}
+
+.cookie-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.cookie-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cookie-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #8c8f9c;
+  transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+}
+
+.cookie-switch input:checked + .cookie-slider {
+  background-color: #007aff;
+  border-color: #007aff;
+}
+
+.cookie-switch input:checked + .cookie-slider:before {
+  transform: translateX(18px);
+  background-color: #fff;
+}
+
+/* Modal Footer Actions */
+.cookie-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 10, 10, 0.5);
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cookie-modal-footer .cookie-btn {
+  flex: 1 1 120px;
+}
+
+.btn-modal-reject {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-modal-reject:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-modal-save {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-modal-save:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-modal-accept {
+  background: #007aff;
+  color: #fff;
+}
+
+.btn-modal-accept:hover {
+  background: #0066d6;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+}
+
+@media (max-width: 768px) {
+  .cookie-banner {
+    bottom: 1rem;
+    right: 1rem;
+    width: calc(100% - 2rem);
+    padding: 1.25rem;
+  }
+  
+  .cookie-modal-body {
+    padding: 1.5rem;
+  }
+  
+  .cookie-modal-footer {
+    padding: 1rem 1.5rem;
+  }
+}
