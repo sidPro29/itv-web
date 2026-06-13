@@ -160,9 +160,9 @@
 .search-results-grid {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
   width: 100%;
   max-width: 1400px;
 }
@@ -202,6 +202,6 @@
     padding: 8rem 2rem 4rem;
   }
   .search-results-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    justify-content: center;
   }
 }

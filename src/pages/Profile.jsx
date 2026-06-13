@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiService } from '../api';
-import { User, Mail, Phone, Calendar, CreditCard, Heart, Send, LogOut, Loader2, Sparkles, MessageSquare, Pencil, X, CheckCircle, Eye, Trash2, Download } from 'lucide-react';
+import { User, Mail, Phone, Calendar, CreditCard, Heart, Send, LogOut, Loader2, Sparkles, MessageSquare, Pencil, X, CheckCircle, Eye, Trash2, Download, Crown, Play } from 'lucide-react';
 import ScrollableRow from '../components/ScrollableRow';
 import './Profile.css';
 
@@ -331,6 +331,11 @@ Thank you for choosing Interplanetary TV!
                     {watchlist.map((item) => (
                       <div key={item._id} className="profile-media-row-card video-card glass-panel" onClick={() => navigate(`/details/${item._id}`, { state: { post: item } })}>
                         <div className="card-image-wrapper">
+                          {item.membership_level && item.membership_level.length > 0 && (
+                            <div className="premium-badge">
+                              <Crown size={16} />
+                            </div>
+                          )}
                           <img src={item.images && item.images[0] ? item.images[0] : ''} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           <div className="card-overlay" style={{ opacity: 1 }}>
                             <button className="card-remove-btn" onClick={(e) => handleRemoveFromWatchlist(item._id, e)} title="Remove">
@@ -363,15 +368,23 @@ Thank you for choosing Interplanetary TV!
                     {continueWatching.map((item) => (
                       <div key={item._id} className="profile-media-row-card video-card glass-panel" onClick={() => navigate(`/details/${item._id}`, { state: { post: item } })}>
                         <div className="card-image-wrapper">
+                          {item.membership_level && item.membership_level.length > 0 && (
+                            <div className="premium-badge">
+                              <Crown size={16} />
+                            </div>
+                          )}
                           <img src={item.images && item.images[0] ? item.images[0] : ''} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           <div className="card-overlay" style={{ opacity: 1 }}>
                             <button className="card-remove-btn" onClick={(e) => handleRemoveFromPlaylist(item._id, e)} title="Remove">
                               <Trash2 size={16} />
                             </button>
+                            <Play className="card-play-btn" size={32} />
                           </div>
-                          <div className="card-progress-bar-container">
-                            <div className="card-progress-bar-fill" style={{ width: `${item.progressPercent}%` }}></div>
-                          </div>
+                          {item.progressPercent > 0 && (
+                            <div className="progress-bar-container" style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '4px', background: 'rgba(255,255,255,0.2)', zIndex: 10 }}>
+                              <div style={{ width: `${item.progressPercent}%`, height: '100%', background: 'var(--primary-color, #007aff)' }}></div>
+                            </div>
+                          )}
                         </div>
                         <div className="card-info">
                           <h3>{item.title}</h3>
@@ -398,6 +411,11 @@ Thank you for choosing Interplanetary TV!
                     {likedVideos.map((item) => (
                       <div key={item._id} className="profile-media-row-card video-card glass-panel" onClick={() => navigate(`/details/${item._id}`, { state: { post: item } })}>
                         <div className="card-image-wrapper">
+                          {item.membership_level && item.membership_level.length > 0 && (
+                            <div className="premium-badge">
+                              <Crown size={16} />
+                            </div>
+                          )}
                           <img src={item.images && item.images[0] ? item.images[0] : ''} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           <div className="card-overlay" style={{ opacity: 1 }}>
                             <button className="card-remove-btn" onClick={(e) => handleRemoveFromLiked(item._id, e)} title="Unlike">

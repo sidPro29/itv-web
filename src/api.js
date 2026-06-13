@@ -81,12 +81,43 @@ export const ApiService = {
     return this.fetchJson(`/media-assets/${id}`);
   },
 
+  async viewMediaAsset(id) {
+    return this.fetchJson(`/media-assets/${id}/view`, {
+      method: 'PUT'
+    });
+  },
+
+  async likeMediaAsset(id) {
+    return this.fetchJson(`/media-assets/${id}/like`, {
+      method: 'PUT'
+    });
+  },
+
   async getNewsArticles() {
     return this.fetchJson('/articles');
   },
 
   async getNewsArticleById(id) {
     return this.fetchJson(`/articles/${id}`);
+  },
+
+  async viewNewsArticle(id) {
+    return this.fetchJson(`/articles/${id}/view`, {
+      method: 'PUT'
+    });
+  },
+
+  async likeNewsArticle(id) {
+    return this.fetchJson(`/articles/${id}/like`, {
+      method: 'PUT'
+    });
+  },
+
+  async commentNewsArticle(id, text) {
+    return this.fetchJson(`/articles/${id}/comment`, {
+      method: 'POST',
+      body: JSON.stringify({ text })
+    });
   },
 
   async getPlans() {

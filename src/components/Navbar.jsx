@@ -61,19 +61,19 @@ export default function Navbar() {
             <Link to="/" className="navbar-brand">
               <img src="/ITV-Logo-copy.gif" alt="Interplanetary TV" className="navbar-logo" />
             </Link>
-            
+
             {!(currentUser && currentUser.activePlans && currentUser.activePlans.some(ap => new Date(ap.expiryDate) > new Date())) && (
               <button className="btn-subscribe" onClick={() => navigate('/plans')}>
                 Subscribe
               </button>
             )}
           </div>
-          
+
           <nav className="navbar-links">
             <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
             <Link to="/news" className={`nav-link ${location.pathname.startsWith('/news') ? 'active' : ''}`}>News</Link>
-            
-            <div 
+
+            <div
               className="all-videos-dropdown-container"
               onMouseEnter={() => setAllVideosOpen(true)}
               onMouseLeave={() => setAllVideosOpen(false)}
@@ -81,7 +81,7 @@ export default function Navbar() {
               <button className={`nav-link dropdown-toggle-btn ${location.pathname.startsWith('/all-videos/') ? 'active' : ''}`}>
                 All Videos <ChevronDown size={14} className={`dropdown-chevron ${allVideosOpen ? 'open' : ''}`} />
               </button>
-              
+
               {allVideosOpen && (
                 <div className="all-videos-dropdown glass-panel animate-slide-down">
                   <Link to="/all-videos/tvshows" className="dropdown-item" onClick={() => setAllVideosOpen(false)}>TV Shows</Link>
@@ -102,7 +102,7 @@ export default function Navbar() {
             <button className="action-btn" onClick={() => navigate('/search')}>
               <Search size={20} />
             </button>
-            
+
             {currentUser ? (
               <div className="profile-container">
                 <button

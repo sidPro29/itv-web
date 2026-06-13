@@ -1,18 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Calendar, User, ArrowLeft, Play, Loader2, Newspaper } from 'lucide-react';
+import { Calendar, User, ArrowLeft, Play, Loader2, Newspaper, Eye, ThumbsUp, MessageSquare, Share2, Send } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { ApiService } from '../api';
 import './News.css';
 
 export default function NewsDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentUser: user } = useAuth();
   const [article, setArticle] = useState(null);
   const [allArticles, setAllArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Social states
+  const [likesCount, setLikesCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState('');
+  const [shareFeedback, setShareFeedback] = useState(false);
+  const [viewTracked, setViewTracked] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   // Pagination references
   const [prevArticle, setPrevArticle] = useState(null);
@@ -28,6 +39,10 @@ export default function NewsDetails() {
         // Fetch detail
         const data = await ApiService.getNewsArticleById(id);
         setArticle(data);
+        setLikesCount(data.likes?.length || 0);
+        setIsLiked(user && data.likes?.includes(user._id || user.id));
+        setComments(data.comments || []);
+        setViewTracked(false);
 
         // Fetch all articles to resolve sidebar and next/prev links
         const list = await ApiService.getNewsArticles();
@@ -57,7 +72,53 @@ export default function NewsDetails() {
       }
     }
     loadDetailAndAll();
-  }, [id]);
+  }, [id, user]);
+
+  useEffect(() => {
+    if (article && !viewTracked) {
+      ApiService.viewNewsArticle(id).then(res => {
+        setArticle(prev => ({ ...prev, views: res.views }));
+        setViewTracked(true);
+      }).catch(err => console.warn('Failed to record view', err));
+    }
+  }, [id, article, viewTracked]);
+
+  const handleLike = async () => {
+    if (!user) {
+      alert("Please log in to like this article.");
+      return;
+    }
+    try {
+      const newLikes = await ApiService.likeNewsArticle(id);
+      setLikesCount(newLikes.length);
+      setIsLiked(newLikes.includes(user._id || user.id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setShareFeedback(true);
+      setTimeout(() => setShareFeedback(false), 2000);
+    });
+  };
+
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      alert("Please log in to post a comment.");
+      return;
+    }
+    if (!commentText.trim()) return;
+    try {
+      const newComments = await ApiService.commentNewsArticle(id, commentText);
+      setComments(newComments);
+      setCommentText('');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -158,6 +219,11 @@ export default function NewsDetails() {
                 <span>{formatDate(article.publishedDate || article.createdAt)}</span>
               </div>
               <span className="details-meta-separator">|</span>
+              <div className="details-meta-item">
+                <Eye size={16} className="meta-icon" />
+                <span>{article.views || 0}</span>
+              </div>
+              <span className="details-meta-separator">|</span>
               <span className="details-category-badge">NEWS</span>
             </div>
 
@@ -203,11 +269,10 @@ export default function NewsDetails() {
               )}
             </div>
 
-            {/* Description / Content */}
             <div className="news-details-content">
               {article.description && article.description.split('\n').map((paragraph, index) => {
                 if (!paragraph.trim()) return null;
-                return <p key={index}>{paragraph.replace(/<[^>]*>/g, '')}</p>;
+                return <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }}></p>;
               })}
             </div>
 
@@ -221,6 +286,72 @@ export default function NewsDetails() {
                 ))}
               </div>
             )}
+
+            <div className="news-details-divider"></div>
+
+            {/* Actions Bar */}
+            <div className="news-actions-bar">
+              <button className={`news-action-btn ${isLiked ? 'active' : ''}`} onClick={handleLike}>
+                <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} />
+                <span>{likesCount} Likes</span>
+              </button>
+              
+              <button className="news-action-btn" onClick={() => document.getElementById('comments-section')?.scrollIntoView({behavior: 'smooth'})}>
+                <MessageSquare size={18} />
+                <span>{comments.length} Comments</span>
+              </button>
+
+              <div style={{ position: 'relative' }}>
+                <button className="news-action-btn" onClick={handleShare}>
+                  <Share2 size={18} />
+                  <span>Share</span>
+                </button>
+                {shareFeedback && <div className="share-toast-bubble animate-slide-down">Link Copied!</div>}
+              </div>
+            </div>
+
+            <div className="news-details-divider"></div>
+
+            {/* Comments Section */}
+            <div id="comments-section" className="news-comments-section">
+              <h3>Comments ({comments.length})</h3>
+              
+              <div className="comments-list">
+                {(showAllComments ? comments : comments.slice(0, 3)).map((c, i) => (
+                  <div key={i} className="comment-bubble">
+                    <div className="comment-header">
+                      <span className="comment-author">{c.user?.username || 'User'}</span>
+                      <span className="comment-date">{formatDate(c.createdAt)}</span>
+                    </div>
+                    <p className="comment-text">{c.text}</p>
+                  </div>
+                ))}
+                {comments.length === 0 && <p className="no-comments-msg">No comments yet. Be the first to share your thoughts!</p>}
+              </div>
+
+              {comments.length > 3 && (
+                <button 
+                  className="news-action-btn" 
+                  style={{ marginBottom: '1.5rem', width: '100%', justifyContent: 'center', background: 'rgba(255,255,255,0.05)' }}
+                  onClick={() => setShowAllComments(!showAllComments)}
+                >
+                  {showAllComments ? 'Show Less Comments' : `View All ${comments.length} Comments`}
+                </button>
+              )}
+
+              <form className="comment-form" onSubmit={handlePostComment}>
+                <input 
+                  type="text" 
+                  placeholder={user ? "Write a comment..." : "Log in to post a comment..."} 
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  disabled={!user}
+                />
+                <button type="submit" disabled={!user || !commentText.trim()} className="btn-primary comment-submit-btn">
+                  <Send size={16} />
+                </button>
+              </form>
+            </div>
 
             <div className="news-details-divider"></div>
 

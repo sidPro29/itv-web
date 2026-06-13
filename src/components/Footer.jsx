@@ -2,11 +2,11 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Footer.css';
 
-export default function Footer() {
+export default function Footer({ forceShow }) {
   const location = useLocation();
 
-  // Do not render footer on player screen
-  if (location.pathname.startsWith('/play/')) {
+  // Do not render footer on player screen or globally on home screen
+  if (!forceShow && (location.pathname.startsWith('/play/') || location.pathname === '/')) {
     return null;
   }
 

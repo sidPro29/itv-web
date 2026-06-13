@@ -28,15 +28,18 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to right, rgba(5, 5, 5, 1) 20%, rgba(5, 5, 5, 0.85) 40%, rgba(5, 5, 5, 0) 80%),
-              linear-gradient(to top, rgba(5, 5, 5, 1) 0%, rgba(5, 5, 5, 0) 30%);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 2;
+  pointer-events: none;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.details-bg-overlay.fade-out {
+  opacity: 0;
 }
 
 .details-content-wrapper {
-  max-width: 1400px;
   width: 100%;
-  margin: 0 auto;
   padding: 0 4rem;
   position: relative;
   z-index: 10;
@@ -50,10 +53,10 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.6rem 1.2rem;
   border-radius: 20px;
-  color: var(--text-secondary);
+  color: white;
   font-weight: 500;
   cursor: pointer;
-  margin-bottom: 2rem;
+  margin-bottom: 25vh;
   transition: var(--transition-fast);
 }
 
@@ -84,25 +87,30 @@
 }
 
 .details-title {
-  font-size: 3.5rem;
-  line-height: 1.1;
+  font-size: 2.08rem;
+  line-height: 1.2;
   margin-bottom: 0.5rem;
   font-weight: 800;
 }
 
 .details-subtitle {
   font-size: 1.25rem;
-  color: var(--text-secondary);
+  color: white;
   font-weight: 500;
   margin-bottom: 1.5rem;
 }
 
 .details-description {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.93rem;
+  color: white;
   line-height: 1.6;
   margin-bottom: 2.5rem;
   max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .details-actions {
@@ -115,7 +123,7 @@
 }
 
 .details-watch-now-btn {
-  padding: 0.85rem 2rem;
+  padding: 0.7rem 1.7rem;
   box-shadow: 0 0 15px rgba(0, 122, 255, 0.3);
 }
 
@@ -127,7 +135,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
   font-weight: 600;
-  padding: 0.85rem 1.5rem;
+  padding: 0.7rem 1.25rem;
   border-radius: 8px;
   cursor: pointer;
   transition: var(--transition-fast);
@@ -153,8 +161,8 @@
 .opinion-btn {
   background: none;
   border: none;
-  color: var(--text-secondary);
-  padding: 0.85rem 1.25rem;
+  color: white;
+  padding: 0.7rem 1rem;
   cursor: pointer;
   transition: var(--transition-fast);
   display: flex;
@@ -210,7 +218,7 @@
 
 .meta-label {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: white;
   font-weight: 600;
   min-width: 90px;
 }
@@ -332,7 +340,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--text-secondary);
+  color: white;
   font-size: 1rem;
   padding: 2rem 0;
 }
@@ -428,20 +436,26 @@
 
 .episode-subtitle {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: white;
   margin: 0;
 }
 
 .no-episodes-msg {
-  color: var(--text-secondary);
+  color: white;
   font-style: italic;
 }
 
-.details-mute-btn {
+.details-volume-control {
   position: fixed;
   top: 8rem;
   right: 4rem;
   z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.details-mute-btn {
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: white;
@@ -454,7 +468,6 @@
   justify-content: center;
   transition: var(--transition-fast);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .details-mute-btn:hover {
@@ -462,8 +475,26 @@
   transform: scale(1.05);
 }
 
+.details-volume-slider-container {
+  width: 100px;
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  height: 42px;
+}
+
+.volume-slider {
+  width: 100%;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
-  .details-mute-btn {
+  .details-volume-control {
     top: 2rem;
     right: 2rem;
   }
@@ -475,6 +506,10 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 3rem;
   z-index: 10;
+  position: relative;
+}
+
+.row-container {
   position: relative;
 }
 
@@ -493,8 +528,8 @@
 }
 
 .video-card {
-  width: 280px;
-  flex: 0 0 280px;
+  width: 224px;
+  flex: 0 0 224px;
   cursor: pointer;
   transition: var(--transition-smooth);
   overflow: hidden;
@@ -508,7 +543,7 @@
 }
 
 .card-image-wrapper {
-  height: 160px;
+  height: 128px;
   background: #222;
   position: relative;
 }
@@ -539,14 +574,14 @@
 }
 
 .card-info {
-  padding: 1.25rem;
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.2rem;
 }
 
 .card-info h3 {
-  font-size: 1.1rem;
+  font-size: 0.93rem;
   font-weight: 600;
   color: var(--text-primary);
   margin: 0;
@@ -557,9 +592,82 @@
 }
 
 .card-info p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-size: 0.72rem;
+  color: white;
   margin: 0;
+}
+
+.details-scroll-toggle-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 4rem;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.details-scroll-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+@media (max-width: 768px) {
+  .details-scroll-toggle-btn {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Scroll Arrows */
+.row-scroll-btn {
+  position: absolute;
+  top: calc(50% + 0.5rem);
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.row-container:hover .row-scroll-btn {
+  opacity: 1;
+}
+
+.row-scroll-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.row-scroll-btn.left {
+  left: -20px;
+}
+
+.row-scroll-btn.right {
+  right: -20px;
 }
 
 

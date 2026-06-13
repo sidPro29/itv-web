@@ -136,6 +136,11 @@ export default function Search() {
           {filteredContent.map(item => (
             <div key={item._id} className="video-card glass-panel" onClick={() => handleCardClick(item)}>
               <div className="card-image-wrapper">
+                {item.membership_level && item.membership_level.length > 0 && (
+                  <div className="premium-badge">
+                    <Crown size={16} />
+                  </div>
+                )}
                 <img 
                   src={item.images && item.images[0] ? item.images[0] : ''} 
                   alt={item.title} 

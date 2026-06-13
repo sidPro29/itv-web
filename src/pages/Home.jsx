@@ -1,12 +1,39 @@
 import { useState, useEffect, useRef } from 'react';
-import { Play, Info, RefreshCw, Plus, Check, Loader2, Volume2, VolumeX } from 'lucide-react';
+import { Play, Info, RefreshCw, Plus, Check, Loader2, Volume2, VolumeX, ChevronLeft, ChevronRight, ThumbsUp, ThumbsDown, Crown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Hls from 'hls.js';
 import { ApiService } from '../api';
+import Footer from '../components/Footer';
 import './Home.css';
 
 // Lock Hero banner to asset: wp_asset_id: 587
 const HERO_WP_ASSET_ID = 587;
+
+const ScrollableRow = ({ title, children }) => {
+  const scrollRef = useRef(null);
+  
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -600 : 600;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="row-container animate-fade-in">
+      <h2 className="row-title">{title}</h2>
+      <button className="row-scroll-btn left" onClick={(e) => { e.stopPropagation(); scroll('left'); }}>
+        <ChevronLeft size={24} />
+      </button>
+      <div className="row-items" ref={scrollRef}>
+        {children}
+      </div>
+      <button className="row-scroll-btn right" onClick={(e) => { e.stopPropagation(); scroll('right'); }}>
+        <ChevronRight size={24} />
+      </button>
+    </div>
+  );
+};
 
 export default function Home() {
   const [allContent, setAllContent] = useState([]);
@@ -34,13 +61,17 @@ export default function Home() {
   const [showHeroVideo, setShowHeroVideo] = useState(false);
   const [heroVideoReady, setHeroVideoReady] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(1);
+  const [heroViewTracked, setHeroViewTracked] = useState(false);
   const heroVideoRef = useRef(null);
   const hlsRef = useRef(null);
 
-  // Global Page States
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [heroInWatchlist, setHeroInWatchlist] = useState(false);
+  const [heroLiked, setHeroLiked] = useState(false);
+  const [heroLikesCount, setHeroLikesCount] = useState(0);
+  const [user, setUser] = useState(null);
   
   const navigate = useNavigate();
 
@@ -155,14 +186,28 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
+    const token = localStorage.getItem('token');
+    if (token) {
+      ApiService.getCurrentUserProfile()
+        .then(u => setUser(u))
+        .catch(() => {});
+    }
   }, []);
 
-  // Sync hero watchlist state
+  // Sync hero states
   useEffect(() => {
     if (!heroContent) return;
     const watchlistIds = JSON.parse(localStorage.getItem('watchlist') || '[]');
     setHeroInWatchlist(watchlistIds.includes(heroContent._id));
-  }, [heroContent]);
+
+    setHeroLikesCount(heroContent.likes ? heroContent.likes.length : 0);
+    if (user) {
+      const uId = user._id || user.id;
+      setHeroLiked(heroContent.likes && heroContent.likes.includes(uId));
+    } else {
+      setHeroLiked(false);
+    }
+  }, [heroContent, user]);
 
   // Reactive listener for local watchlist and continue watching changes
   useEffect(() => {
@@ -183,6 +228,12 @@ export default function Home() {
 
     setHeroVideoUrl('');
     setHeroVideoReady(false);
+    
+    // Track view for hero banner
+    if (!heroViewTracked) {
+      ApiService.viewMediaAsset(heroContent._id).catch(err => console.warn('Failed to record hero view', err));
+      setHeroViewTracked(true);
+    }
 
     async function resolveHeroStream() {
       try {
@@ -293,13 +344,14 @@ export default function Home() {
     }
   }, [showHeroVideo, heroVideoUrl]);
 
-  // Control muted state of hero video
+  // Control muted state and volume of hero video
   useEffect(() => {
     const video = heroVideoRef.current;
     if (video) {
       video.muted = isMuted;
+      video.volume = volume;
     }
-  }, [isMuted, showHeroVideo]);
+  }, [isMuted, volume, showHeroVideo]);
 
   const handleHeroWatchlistToggle = () => {
     if (!heroContent) return;
@@ -315,6 +367,26 @@ export default function Home() {
     window.dispatchEvent(new Event('watchlistUpdated'));
   };
 
+  const handleHeroLike = async (e) => {
+    e.stopPropagation();
+    if (!user) {
+      alert("Please log in to like this video.");
+      return;
+    }
+    if (!heroContent) return;
+    
+    try {
+      const newLikes = await ApiService.likeMediaAsset(heroContent._id);
+      setHeroLikesCount(newLikes.length);
+      setHeroLiked(newLikes.includes(user._id || user.id));
+      
+      // Update local heroContent so re-renders don't revert count
+      setHeroContent(prev => ({ ...prev, likes: newLikes }));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const navigateToDetails = (item) => {
     navigate(`/details/${item._id}`, { state: { post: item } });
   };
@@ -323,32 +395,55 @@ export default function Home() {
     navigate(`/play/${item._id}`, { state: { post: item } });
   };
 
+  const toggleHeroPlay = () => {
+    if (heroVideoRef.current) {
+      if (heroVideoRef.current.paused) {
+        // Auto seek to the latest live edge
+        try {
+          if (hlsRef.current && hlsRef.current.liveSyncPosition) {
+            heroVideoRef.current.currentTime = hlsRef.current.liveSyncPosition;
+          } else if (heroVideoRef.current.seekable && heroVideoRef.current.seekable.length > 0) {
+            heroVideoRef.current.currentTime = heroVideoRef.current.seekable.end(heroVideoRef.current.seekable.length - 1);
+          }
+        } catch (err) {
+          console.warn('Could not seek to live edge', err);
+        }
+        heroVideoRef.current.play().catch(e => console.log('Play blocked', e));
+      } else {
+        heroVideoRef.current.pause();
+      }
+    }
+  };
+
   const renderRow = (title, items) => {
     if (!items || items.length === 0) return null;
     return (
-      <div className="row-container animate-fade-in" key={title}>
-        <h2 className="row-title">{title}</h2>
-        <div className="row-items">
-          {items.map((item) => (
-            <div key={item._id} className="video-card glass-panel" onClick={() => navigateToDetails(item)}>
-              <div className="card-image-wrapper">
-                <img 
-                  src={item.images && item.images[0] ? item.images[0] : ''} 
-                  alt={item.title} 
-                  style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                />
-                <div className="card-overlay">
-                  <Play className="card-play-btn" size={32} />
+      <ScrollableRow key={title} title={title}>
+        {items.map((item) => (
+          <div key={item._id} className="video-card glass-panel" onClick={() => navigateToDetails(item)}>
+            <div className="card-image-wrapper">
+              {item.membership_level && item.membership_level.length > 0 && (
+                <div className="premium-badge">
+                  <Crown size={16} />
                 </div>
-              </div>
-              <div className="card-info">
-                <h3>{item.title}</h3>
-                <p>{item.type} • HD</p>
+              )}
+              <img 
+                src={item.images && item.images[0] ? item.images[0] : ''} 
+                alt={item.title} 
+                style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                loading="lazy"
+              />
+              <div className="card-overlay">
+                <Play className="card-play-btn" size={32} />
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+            <div className="card-info">
+              <h3>{item.title}</h3>
+              <p>{item.type} • HD</p>
+            </div>
+          </div>
+        ))}
+      </ScrollableRow>
     );
   };
 
@@ -431,8 +526,12 @@ export default function Home() {
   return (
     <div className="home-container">
       {heroContent && (
-        <section className="hero-section">
-          <div className="hero-overlay"></div>
+        <section className="hero-section" onClick={toggleHeroPlay}>
+          <div className="hero-overlay" style={{ background: 'transparent' }}></div>
+          
+          <div className="hero-live-badge">
+            <span className="live-dot"></span> LIVE
+          </div>
           
           {/* Always render background image underneath to prevent black screens */}
           <div className="hero-bg">
@@ -466,37 +565,62 @@ export default function Home() {
           )}
           
           {showHeroVideo && heroVideoUrl && heroVideoReady && (
-            <button 
-              className="hero-mute-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsMuted(!isMuted);
-              }}
-              title={isMuted ? "Unmute Video" : "Mute Video"}
-            >
-              {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-            </button>
+            <div className="hero-volume-control" onClick={(e) => e.stopPropagation()}>
+              <div className="volume-slider-container">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.05" 
+                  value={isMuted ? 0 : volume} 
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setVolume(val);
+                    if (val > 0) setIsMuted(false);
+                    else setIsMuted(true);
+                  }}
+                  className="volume-slider"
+                />
+              </div>
+              <button 
+                className="hero-mute-btn"
+                onClick={() => setIsMuted(!isMuted)}
+                title={isMuted ? "Unmute Video" : "Mute Video"}
+              >
+                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              </button>
+            </div>
           )}
           
           <div className="hero-content animate-fade-in">
-            <span className="hero-badge">{heroContent.type ? heroContent.type.toUpperCase() : 'NEW'}</span>
             <h1 className="hero-title">{heroContent.title}</h1>
             <p className="hero-description">
-              {heroContent.description || 'Explore the deepest corners of the universe in our latest high-definition documentary series.'}
+              {heroContent.description || 'Interplanetary.tv (iTV) is your ultimate gateway to the cosmos—bringing you cutting-edge news, captivating education, and thrilling entertainment all about space.'}
             </p>
-            
             <div className="hero-actions">
               {/* Hero play button navigates DIRECTLY to fullscreen player */}
-              <button className="btn-primary" onClick={() => navigateToPlayerDirect(heroContent)}>
+              <button className="btn-primary" onClick={(e) => { e.stopPropagation(); navigateToPlayerDirect(heroContent); }}>
                 <Play size={20} fill="currentColor" />
                 Watch Now
               </button>
               
               {/* Hero more info button navigates to Details screen */}
-              <button className="btn-secondary" onClick={() => navigateToDetails(heroContent)}>
-                <Info size={20} />
-                More Info
+              <button className="details-action-btn" onClick={(e) => { e.stopPropagation(); navigateToDetails(heroContent); }}>
+                <Info size={18} />
+                <span>More Info</span>
               </button>
+              
+              <button className={`details-action-btn ${heroInWatchlist ? 'active' : ''}`} onClick={(e) => { e.stopPropagation(); handleHeroWatchlistToggle(); }}>
+                {heroInWatchlist ? <Check size={18} color="#30d158" /> : <Plus size={18} />}
+                <span>Watchlist</span>
+              </button>
+
+              <div className="details-opinion-group" onClick={(e) => e.stopPropagation()}>
+                <button className={`opinion-btn ${heroLiked ? 'active' : ''}`} onClick={handleHeroLike} title="Like">
+                  <ThumbsUp size={16} fill={heroLiked ? "currentColor" : "none"} />
+                  <span style={{ fontSize: '0.85rem', marginLeft: '6px' }}>{heroLikesCount}</span>
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -505,63 +629,6 @@ export default function Home() {
       {/* Content Rows */}
       <section className="content-rows">
         
-        {/* 1. Continue Watching (Locally Managed) */}
-        {continueWatching.length > 0 && (
-          <div className="row-container animate-fade-in">
-            <h2 className="row-title">Continue Watching</h2>
-            <div className="row-items">
-              {continueWatching.map((item) => (
-                <div key={`cw-${item._id}`} className="video-card glass-panel" onClick={() => navigateToDetails(item)}>
-                  <div className="card-image-wrapper">
-                    <img 
-                      src={item.images && item.images[0] ? item.images[0] : ''} 
-                      alt={item.title} 
-                      style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                    />
-                    <div className="card-overlay">
-                      <Play className="card-play-btn" size={32} />
-                    </div>
-                    {/* Completion progress bar */}
-                    <div className="card-progress-bar-container">
-                      <div className="card-progress-bar-fill" style={{ width: `${item.progressPercent}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="card-info">
-                    <h3>{item.title}</h3>
-                    <p>{item.type} • {Math.round(item.progressPercent)}% watched</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 2. My Watchlist (Locally Managed) */}
-        {watchlist.length > 0 && (
-          <div className="row-container animate-fade-in">
-            <h2 className="row-title">My Watchlist</h2>
-            <div className="row-items">
-              {watchlist.map((item) => (
-                <div key={`wl-${item._id}`} className="video-card glass-panel" onClick={() => navigateToDetails(item)}>
-                  <div className="card-image-wrapper">
-                    <img 
-                      src={item.images && item.images[0] ? item.images[0] : ''} 
-                      alt={item.title} 
-                      style={{width: '100%', height: '100%', objectFit: 'cover'}}
-                    />
-                    <div className="card-overlay">
-                      <Play className="card-play-btn" size={32} />
-                    </div>
-                  </div>
-                  <div className="card-info">
-                    <h3>{item.title}</h3>
-                    <p>{item.type} • HD</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Standard API Categories */}
         {Object.values(stacks).every(arr => !arr || arr.length === 0) && (
@@ -583,6 +650,10 @@ export default function Home() {
         {renderRow('Documentary Film', stacks.documentaryFilms)}
         {renderRow('Science-Fiction', stacks.scienceFiction)}
 
+        {/* Footer embedded in the scrollable row container */}
+        <div style={{ marginTop: '3rem' }}>
+          <Footer forceShow={true} />
+        </div>
       </section>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Calendar, User, Search, Loader2, Newspaper } from 'lucide-react';
+import { Calendar, User, Search, Loader2, Newspaper, Eye } from 'lucide-react';
 import { ApiService } from '../api';
 import './News.css';
 
@@ -149,6 +149,10 @@ export default function News() {
                           <div className="metadata-item">
                             <User size={14} className="meta-icon" />
                             <span>{getAuthorName(article)}</span>
+                          </div>
+                          <div className="metadata-item">
+                            <Eye size={14} className="meta-icon" />
+                            <span>{article.views || 0}</span>
                           </div>
                           <span className="article-category-badge">NEWS</span>
                         </div>

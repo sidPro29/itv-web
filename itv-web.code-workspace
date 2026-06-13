@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../itv-backend"
+		},
+		{
+			"path": "../itv-cms"
+		},
+		{
+			"path": "../itv-androidTv"
+		}
+	],
+	"settings": {}
+}
