@@ -55,6 +55,8 @@ export default function Player() {
           if (v.clipId) {
             const baseUrl = import.meta.env.VITE_API_URL || 'https://api.interplanetary.tv/api';
             src = `${baseUrl}/media-assets/playback/${v.clipId}`;
+          } else if (v.ytUrl) {
+            src = v.ytUrl;
           } else {
             // Otherwise search for non-svp video URLs
             const keys = Object.keys(v);
@@ -165,7 +167,10 @@ export default function Player() {
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('error', handleVideoError);
 
-    if (Hls.isSupported() && streamUrl.includes('.m3u8')) {
+    if (streamUrl.includes('youtube.com') || streamUrl.includes('youtu.be')) {
+      // It's a YouTube embed, handled by iframe rendering below.
+      return;
+    } else if (Hls.isSupported() && streamUrl.includes('.m3u8')) {
       hls = new Hls();
       hls.loadSource(streamUrl);
       hls.attachMedia(video);
@@ -282,13 +287,23 @@ export default function Player() {
       
       <img src="/ITV-Logo-copy.gif" alt="Interplanetary TV" className="player-logo-overlay" />
       
-      <video
-        ref={videoRef}
-        className="video-element"
-        controls
-        autoPlay
-        playsInline
-      />
+      {streamUrl && (streamUrl.includes('youtube.com') || streamUrl.includes('youtu.be')) ? (
+        <iframe
+          src={streamUrl}
+          className="video-element"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ border: 'none', backgroundColor: '#000' }}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          className="video-element"
+          controls
+          autoPlay
+          playsInline
+        />
+      )}
     </div>
   );
 }

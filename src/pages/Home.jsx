@@ -294,16 +294,8 @@ export default function Home() {
   useEffect(() => {
     if (!heroContent) return;
 
-    setShowHeroVideo(false);
+    setShowHeroVideo(true);
     setHeroVideoReady(false);
-
-    const delayTimer = setTimeout(() => {
-      setShowHeroVideo(true);
-    }, 2000);
-
-    return () => {
-      clearTimeout(delayTimer);
-    };
   }, [heroContent]);
 
   // Bind/Play HLS/HTML5 player to banner background element
@@ -564,36 +556,15 @@ export default function Home() {
             </div>
           )}
           
-          {showHeroVideo && heroVideoUrl && heroVideoReady && (
-            <div className="hero-volume-control" onClick={(e) => e.stopPropagation()}>
-              <div className="volume-slider-container">
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="1" 
-                  step="0.05" 
-                  value={isMuted ? 0 : volume} 
-                  onChange={(e) => {
-                    const val = parseFloat(e.target.value);
-                    setVolume(val);
-                    if (val > 0) setIsMuted(false);
-                    else setIsMuted(true);
-                  }}
-                  className="volume-slider"
-                />
-              </div>
-              <button 
-                className="hero-mute-btn"
-                onClick={() => setIsMuted(!isMuted)}
-                title={isMuted ? "Unmute Video" : "Mute Video"}
-              >
-                {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </button>
-            </div>
-          )}
+
           
           <div className="hero-content animate-fade-in">
             <h1 className="hero-title">{heroContent.title}</h1>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px', fontSize: '0.9rem', color: '#ccc' }}>
+               <span style={{ border: '1px solid rgba(255,255,255,0.4)', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>{heroContent.rating || '3+ U/A'}</span>
+               <span>{heroContent.type ? heroContent.type.toUpperCase() : 'VIDEO'}</span>
+               <span>HD</span>
+            </div>
             <p className="hero-description">
               {heroContent.description || 'Interplanetary.tv (iTV) is your ultimate gateway to the cosmos—bringing you cutting-edge news, captivating education, and thrilling entertainment all about space.'}
             </p>
@@ -621,6 +592,34 @@ export default function Home() {
                   <span style={{ fontSize: '0.85rem', marginLeft: '6px' }}>{heroLikesCount}</span>
                 </button>
               </div>
+
+              {showHeroVideo && heroVideoUrl && heroVideoReady && (
+                <div className="hero-volume-control" style={{ position: 'relative', bottom: 'auto', right: 'auto' }} onClick={(e) => e.stopPropagation()}>
+                  <div className="volume-slider-container">
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="1" 
+                      step="0.05" 
+                      value={isMuted ? 0 : volume} 
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        setVolume(val);
+                        if (val > 0) setIsMuted(false);
+                        else setIsMuted(true);
+                      }}
+                      className="volume-slider"
+                    />
+                  </div>
+                  <button 
+                    className="hero-mute-btn"
+                    onClick={() => setIsMuted(!isMuted)}
+                    title={isMuted ? "Unmute Video" : "Mute Video"}
+                  >
+                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </section>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search as SearchIcon, X, Loader2, Play } from 'lucide-react';
+import { Search as SearchIcon, X, Loader2, Play, Crown } from 'lucide-react';
 import { ApiService } from '../api';
 import './Search.css';
 

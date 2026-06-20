@@ -85,8 +85,12 @@
   position: absolute;
   bottom: 2rem;
   left: 2rem;
-  max-width: 600px;
+  max-width: 850px;
   z-index: 4;
+}
+
+.hero-description {
+  max-width: 600px;
 }
 
 .hero-volume-control {

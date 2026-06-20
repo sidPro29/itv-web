@@ -326,6 +326,8 @@ export default function Details() {
           if (post.videos && typeof post.videos === 'object') {
             if (post.videos.clipId) {
               clipId = post.videos.clipId;
+            } else if (post.videos.ytUrl) {
+              directUrl = post.videos.ytUrl;
             } else {
               const keys = Object.keys(post.videos);
               for (const key of keys) {
@@ -364,17 +366,14 @@ export default function Details() {
     resolveBgStream();
   }, [post, episodes]);
 
-  // 2-Second Delay to Play Background Video
+  // No delay to Play Background Video
   useEffect(() => {
     if (!trailerUrl || (!bgIsTrailer && !hasAccess)) {
       setShowBgVideo(false);
       setBgVideoReady(false);
       return;
     }
-    const timer = setTimeout(() => {
-      setShowBgVideo(true);
-    }, 2000);
-    return () => clearTimeout(timer);
+    setShowBgVideo(true);
   }, [trailerUrl, bgIsTrailer, hasAccess]);
 
   // Bind background HLS trailer/video player
@@ -534,7 +533,29 @@ export default function Details() {
       {/* Ambient Blurred Background Poster or Background Trailer Video */}
       {trailerUrl ? (
         <div className="details-bg-video-container">
-          {showBgVideo && (
+          {showBgVideo && (trailerUrl.includes('youtube.com') || trailerUrl.includes('youtu.be')) ? (
+            <iframe
+              src={(() => {
+                try {
+                  const u = new URL(trailerUrl);
+                  u.searchParams.set('autoplay', '1');
+                  u.searchParams.set('controls', '0');
+                  u.searchParams.set('mute', isMuted ? '1' : '0');
+                  u.searchParams.set('showinfo', '0');
+                  u.searchParams.set('modestbranding', '1');
+                  u.searchParams.set('loop', '1');
+                  const pathParts = u.pathname.split('/');
+                  const vidId = pathParts[pathParts.length - 1];
+                  if (vidId) u.searchParams.set('playlist', vidId);
+                  return u.toString();
+                } catch(e) { return trailerUrl; }
+              })()}
+              className={`details-bg-video-element ${bgVideoReady ? 'visible' : ''}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              style={{ border: 'none', pointerEvents: 'none', width: '100vw', height: '100vh', transform: 'scale(1.2)' }}
+              onLoad={() => setBgVideoReady(true)}
+            />
+          ) : showBgVideo ? (
             <video
               ref={videoRef}
               className={`details-bg-video-element ${bgVideoReady ? 'visible' : ''}`}
@@ -544,7 +565,7 @@ export default function Details() {
               playsInline
               onPlaying={() => setBgVideoReady(true)}
             />
-          )}
+          ) : null}
           {showBgVideo && !bgVideoReady && (
             <div className="details-bg-video-loader">
               <Loader2 className="animate-spin" size={32} color="#007aff" />
@@ -558,36 +579,7 @@ export default function Details() {
       )}
       <div className={`details-bg-overlay ${bgVideoReady ? 'fade-out' : ''}`}></div>
 
-      {showBgVideo && trailerUrl && bgVideoReady && (
-        <div className="details-volume-control" onClick={(e) => e.stopPropagation()}>
-          <div className="details-volume-slider-container">
-            <input 
-              type="range" 
-              min="0" 
-              max="1" 
-              step="0.05" 
-              value={isMuted ? 0 : volume} 
-              onChange={(e) => {
-                const val = parseFloat(e.target.value);
-                setVolume(val);
-                if (val > 0) setIsMuted(false);
-                else setIsMuted(true);
-              }}
-              className="volume-slider"
-            />
-          </div>
-          <button 
-            className="details-mute-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMuted(!isMuted);
-            }}
-            title={isMuted ? "Unmute Video" : "Mute Video"}
-          >
-            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-          </button>
-        </div>
-      )}
+
 
       {/* Main Details Panel */}
       <div className="details-content-wrapper animate-fade-in">
@@ -601,6 +593,12 @@ export default function Details() {
           
           <h1 className="details-title">{post.title}</h1>
           
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px', fontSize: '0.95rem', color: '#ccc' }}>
+             <span style={{ border: '1px solid rgba(255,255,255,0.4)', padding: '2px 8px', borderRadius: '4px', fontWeight: 'bold' }}>{post.rating || '3+ U/A'}</span>
+             <span>{post.type ? post.type.toUpperCase() : 'VIDEO'}</span>
+             <span>HD</span>
+          </div>
+
           {post.subtitle && <h3 className="details-subtitle">{post.subtitle}</h3>}
 
           <p className="details-description">
@@ -637,6 +635,37 @@ export default function Details() {
                 </div>
               )}
             </div>
+
+            {showBgVideo && trailerUrl && bgVideoReady && (
+              <div className="details-volume-control" style={{ position: 'relative', bottom: 'auto', right: 'auto', top: 'auto', marginLeft: '10px' }} onClick={(e) => e.stopPropagation()}>
+                <div className="details-volume-slider-container">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.05" 
+                    value={isMuted ? 0 : volume} 
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value);
+                      setVolume(val);
+                      if (val > 0) setIsMuted(false);
+                      else setIsMuted(true);
+                    }}
+                    className="volume-slider"
+                  />
+                </div>
+                <button 
+                  className="details-mute-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMuted(!isMuted);
+                  }}
+                  title={isMuted ? "Unmute Video" : "Mute Video"}
+                >
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+              </div>
+            )}
           </div>
 
           {minPlanName && !hasAccess && (
@@ -706,7 +735,7 @@ export default function Details() {
                 {episodes.map((episode, index) => (
                   <div 
                     key={episode._id} 
-                    className="episode-card glass-panel"
+                    className="video-card glass-panel"
                     onClick={() => {
                       if (!hasAccess) {
                         if (window.confirm(`You need at least the '${minPlanName || 'Premium'}' subscription plan to watch this episode. Do you want to view our plans?`)) {
@@ -717,7 +746,7 @@ export default function Details() {
                       navigate(`/play/${episode._id}`, { state: { post: episode } });
                     }}
                   >
-                    <div className="episode-card-img-wrapper" style={{ position: 'relative' }}>
+                    <div className="card-image-wrapper">
                       {post.membership_level && post.membership_level.length > 0 && (
                         <div className="premium-badge">
                           <Crown size={16} />
@@ -726,15 +755,16 @@ export default function Details() {
                       <img 
                         src={episode.images && episode.images[0] ? episode.images[0] : bgImg} 
                         alt={episode.title} 
+                        style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                        loading="lazy"
                       />
-                      <div className="episode-play-overlay">
-                        <Play fill="currentColor" size={20} />
+                      <div className="card-overlay">
+                        <Play className="card-play-btn" size={32} />
                       </div>
                     </div>
-                    <div className="episode-card-info">
-                      <span className="episode-number">Episode {index + 1}</span>
-                      <h3>{episode.title}</h3>
-                      <p className="episode-subtitle">{episode.subtitle || 'Episode'}</p>
+                    <div className="card-info">
+                      <h3 style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{episode.title}</h3>
+                      <p>{episode.type ? episode.type.toUpperCase() : 'EPISODE'} • HD</p>
                     </div>
                   </div>
                 ))}

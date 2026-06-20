@@ -64,10 +64,33 @@ export default function VideoGrid() {
         const vids = await ApiService.getVideos().catch(() => []);
         const movs = await ApiService.getMovies().catch(() => []);
         const shows = await ApiService.getTVShows().catch(() => []);
+        const eps = await ApiService.getEpisodes().catch(() => []);
         const combined = [...vids, ...movs, ...shows];
 
         // Apply specific filter
-        const filtered = combined.filter(config.filter);
+        let filtered = combined.filter(config.filter);
+        
+        if (category === 'tvshows') {
+          filtered.sort((a, b) => {
+            const countA = eps.filter(e => e.program?.programId === a._id).length;
+            const countB = eps.filter(e => e.program?.programId === b._id).length;
+            return countB - countA;
+          });
+        } else if (category === 'movies') {
+          filtered.sort((a, b) => {
+            const getScore = (m) => {
+              const hasTrailer = m.trailer && (m.trailer.clipId || (m.trailer.clips && m.trailer.clips.length > 0));
+              const hasVideo = m.videos && m.videos.clipId;
+              
+              if (hasTrailer && hasVideo) return 4;
+              if (!hasTrailer && hasVideo) return 3;
+              if (hasTrailer && !hasVideo) return 2;
+              return 1;
+            };
+            return getScore(b) - getScore(a);
+          });
+        }
+
         setItems(filtered);
       } catch (e) {
         console.error("Failed to load category assets:", e);
@@ -120,7 +143,7 @@ export default function VideoGrid() {
               </div>
               <div className="card-info">
                 <h3>{item.title}</h3>
-                <p>{item.type.toUpperCase()} • HD</p>
+                <p>{item.type ? item.type.toUpperCase() : 'VIDEO'} • HD</p>
               </div>
             </div>
           ))}
