@@ -250,9 +250,15 @@
 }
 
 /* Responsive Redesign for Small Screen Viewports */
+@media (max-width: 1024px) {
+  .details-content-wrapper {
+    padding: 0 2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .details-page-container {
-    padding: 6rem 1rem 2rem;
+    padding: 6rem 0 2rem;
     align-items: flex-start;
   }
   .details-bg {
@@ -267,17 +273,100 @@
   }
   .details-content-wrapper {
     margin-top: 30vh;
-    padding: 0;
+    padding: 0 1rem;
   }
   .details-info-section {
     max-width: 100%;
   }
   .details-title {
-    font-size: 2.25rem;
+    font-size: 1.75rem;
   }
   .details-description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-bottom: 1.5rem;
+    -webkit-line-clamp: 3;
+  }
+  .back-btn-float {
+    margin-bottom: 15vh;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  .details-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .details-watch-now-btn {
+    padding: 0.6rem 1.2rem;
+  }
+  .details-action-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+  }
+  .episodes-section-title {
+    font-size: 1.5rem;
+  }
+  .episodes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  .video-card {
+    width: 160px;
+    flex: 0 0 160px;
+  }
+  .card-image-wrapper {
+    height: 96px;
+  }
+  .card-info h3 {
+    font-size: 0.82rem;
+  }
+  .card-info p {
+    font-size: 0.65rem;
+  }
+  .row-scroll-btn {
+    display: none;
+  }
+  .details-stack-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+  .details-episodes-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+  .meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .meta-label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .details-title {
+    font-size: 1.4rem;
+  }
+  .details-content-wrapper {
+    padding: 0 0.75rem;
+  }
+  .back-btn-float {
+    margin-bottom: 10vh;
+  }
+  .details-actions {
+    gap: 0.4rem;
+  }
+  .details-action-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
+  .video-card {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+  .card-image-wrapper {
+    height: 84px;
   }
 }
 
@@ -499,8 +588,20 @@
 
 @media (max-width: 768px) {
   .details-volume-control {
-    top: 2rem;
-    right: 2rem;
+    top: auto;
+    right: auto;
+    position: relative;
+  }
+
+  .details-volume-slider-container {
+    width: 80px;
+    height: 36px;
+    padding: 0 0.75rem;
+  }
+
+  .details-mute-btn {
+    width: 36px;
+    height: 36px;
   }
 }
 

@@ -598,28 +598,111 @@
 
 @media (max-width: 768px) {
   .profile-page-container {
-    padding: 6rem 1rem 2rem;
+    padding: 6rem 0 2rem;
   }
   
   .profile-content-wrapper {
-    padding: 0;
+    padding: 0 0.75rem;
   }
   
   .profile-info-banner {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .banner-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .banner-user-name {
+    font-size: 1.35rem;
   }
   
   .edit-profile-btn {
     width: 100%;
     justify-content: center;
   }
+
+  .tab-pane-title {
+    font-size: 1.35rem;
+  }
+
+  .profile-media-row-card {
+    width: 180px;
+    flex: 0 0 180px;
+  }
+
+  .profile-media-row-card .card-image-wrapper {
+    height: 110px;
+  }
+
+  .purchase-card {
+    width: 220px;
+    flex: 0 0 220px;
+  }
+
+  .contact-method-card {
+    width: 220px;
+    flex: 0 0 220px;
+  }
+
+  .contact-card-banner {
+    height: 110px;
+  }
   
   .contact-methods-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+
+  .sidebar-tab-btn {
+    font-size: 0.85rem;
+    padding: 0.7rem 1rem;
+  }
+
+  .edit-modal-card {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-content-wrapper {
+    padding: 0 0.5rem;
+  }
+
+  .profile-info-banner {
+    padding: 1rem;
+  }
+
+  .banner-user-name {
+    font-size: 1.15rem;
+  }
+
+  .tab-pane-title {
+    font-size: 1.15rem;
+  }
+
+  .profile-media-row-card {
+    width: 160px;
+    flex: 0 0 160px;
+  }
+
+  .profile-media-row-card .card-image-wrapper {
+    height: 96px;
+  }
+
+  .purchase-card {
+    width: 200px;
+    flex: 0 0 200px;
+  }
+
+  .contact-method-card {
+    width: 200px;
+    flex: 0 0 200px;
   }
 }
 

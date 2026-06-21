@@ -426,4 +426,209 @@
   background: linear-gradient(135deg, #0084ff 0%, #0052be 100%);
 }
 
+/* ============================================================
+   MOBILE RESPONSIVE STYLES
+   ============================================================ */
 
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-logo {
+    height: 34px;
+  }
+
+  .btn-subscribe {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+
+  .desktop-profile {
+    display: none !important;
+  }
+
+  .action-btn {
+    padding: 0.4rem;
+  }
+}
+
+/* ── Mobile Navigation Drawer ─────────────────────────────── */
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9998;
+  animation: fadeInBackdrop 0.2s ease forwards;
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 85%;
+  max-width: 360px;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(10, 10, 15, 0.98);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: 5rem 0 2rem;
+  overflow-y: auto;
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem;
+  flex: 1;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0.5rem;
+  color: #a0a5b5;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  color: #fff;
+}
+
+.mobile-nav-link.active {
+  color: #007aff;
+}
+
+.mobile-nav-expandable {
+  justify-content: space-between;
+  font-family: inherit;
+}
+
+.mobile-subnav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(0, 122, 255, 0.3);
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mobile-subnav-link {
+  display: block;
+  padding: 0.75rem 0.75rem;
+  color: #8c8f9c;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.mobile-subnav-link:hover {
+  color: #fff;
+}
+
+.mobile-nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0.5rem 1.5rem;
+}
+
+.mobile-nav-auth {
+  padding: 0.5rem 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mobile-nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.mobile-nav-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007aff, #0056b3);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.mobile-nav-username {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.mobile-nav-email {
+  display: block;
+  font-size: 0.8rem;
+  color: #5c5f6a;
+  word-break: break-all;
+}
+
+.mobile-nav-logout {
+  color: #ff453a !important;
+}
+
+.mobile-nav-logout:hover {
+  background: rgba(255, 69, 58, 0.08);
+}
+
+.mobile-nav-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #007aff;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.85rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.mobile-nav-login-btn:hover {
+  background: #0066d6;
+}

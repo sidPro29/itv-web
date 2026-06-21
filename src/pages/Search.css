@@ -199,9 +199,64 @@
 
 @media (max-width: 768px) {
   .search-page {
-    padding: 8rem 2rem 4rem;
+    padding: 6rem 1rem 2rem;
   }
+
+  .search-page-title {
+    font-size: 2rem;
+  }
+
+  .search-page-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .search-filter-tabs {
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+  .search-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .search-filter-tab-btn {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
   .search-results-grid {
+    gap: 1rem;
     justify-content: center;
+  }
+
+  .search-results-grid .video-card {
+    width: 160px;
+    flex: 0 0 160px;
+  }
+
+  .search-results-grid .card-image-wrapper {
+    height: 96px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-page {
+    padding: 6rem 0.75rem 2rem;
+  }
+
+  .search-page-title {
+    font-size: 1.75rem;
+  }
+
+  .search-results-grid .video-card {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+
+  .search-results-grid .card-image-wrapper {
+    height: 84px;
   }
 }

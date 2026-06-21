@@ -37,6 +37,30 @@ export function AuthProvider({ children }) {
       throw new Error(data.msg || 'Login failed');
     }
 
+    if (data.requires2FA) {
+      return data; // e.g. { requires2FA: true, email: ... }
+    }
+
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    setCurrentUser(data.user);
+    return data.user;
+  };
+
+  const verify2FA = async (email, code) => {
+    const response = await fetch((import.meta.env.VITE_API_URL || 'https://api.interplanetary.tv/api') + '/auth/verify-2fa', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, code })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.msg || 'Verification failed');
+    }
+
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     setCurrentUser(data.user);
@@ -95,6 +119,7 @@ export function AuthProvider({ children }) {
     currentUser,
     setCurrentUser,
     login,
+    verify2FA,
     signup,
     logout,
     refreshUser,

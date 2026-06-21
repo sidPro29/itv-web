@@ -358,17 +358,80 @@
 }
 
 @media (max-width: 768px) {
+  .plans-page {
+    padding: 6rem 1rem 2rem;
+  }
+
+  .plans-title {
+    font-size: 2.2rem;
+  }
+
+  .plans-subtitle {
+    font-size: 1rem;
+  }
+
+  .plans-header-container {
+    margin-bottom: 2.5rem;
+  }
+
   .plan-card-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
-    padding: 1.5rem;
+    gap: 1.25rem;
+    padding: 1.25rem;
   }
+
   .plan-card-info-side {
     padding-right: 0;
   }
+
   .plan-card-price-side {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .plan-name {
+    font-size: 1.15rem;
+  }
+
+  .price-value {
+    font-size: 2rem;
+  }
+
+  .plan-buy-btn {
+    width: 120px;
+    padding: 0.7rem 0;
+    font-size: 0.9rem;
+  }
+
+  .payment-modal-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .toggle-switch {
+    width: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .plans-page {
+    padding: 6rem 0.75rem 2rem;
+  }
+
+  .plans-title {
+    font-size: 1.8rem;
+  }
+
+  .price-value {
+    font-size: 1.75rem;
+  }
+
+  .plan-buy-btn {
+    width: 100px;
+    font-size: 0.85rem;
   }
 }

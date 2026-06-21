@@ -148,3 +148,29 @@
   box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
 }
 
+@media (max-width: 480px) {
+  .footer-glass {
+    padding: 2rem 1rem 1.25rem;
+  }
+
+  .footer-links-grid {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .footer-column {
+    flex: none;
+  }
+
+  .footer-brand-section {
+    flex: none;
+  }
+
+  .footer-description {
+    font-size: 0.85rem;
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
+  }
+}

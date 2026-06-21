@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Play, Menu, LogOut, ChevronDown } from 'lucide-react';
+import { Search, User, Play, Menu, X, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
@@ -13,6 +13,8 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [allVideosOpen, setAllVideosOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileAllVideosOpen, setMobileAllVideosOpen] = useState(false);
 
   // Listen to window scroll to change header opacity
   useEffect(() => {
@@ -20,6 +22,22 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setMobileAllVideosOpen(false);
+  }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,6 +54,7 @@ export default function Navbar() {
   const handleLogoutRequest = () => {
     setShowLogoutConfirm(true);
     setDropdownOpen(false);
+    setMobileMenuOpen(false);
   };
 
   const handleLogoutConfirmed = () => {
@@ -46,6 +65,11 @@ export default function Navbar() {
     window.dispatchEvent(new Event('continueWatchingUpdated'));
     setShowLogoutConfirm(false);
     navigate('/');
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setMobileAllVideosOpen(false);
   };
 
   // Do not render navigation header on the player screen
@@ -104,7 +128,7 @@ export default function Navbar() {
             </button>
 
             {currentUser ? (
-              <div className="profile-container">
+              <div className="profile-container desktop-profile">
                 <button
                   className="login-link"
                   onClick={() => setDropdownOpen((prev) => !prev)}
@@ -139,18 +163,77 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="login-link">
+              <Link to="/login" className="login-link desktop-profile">
                 <User size={16} />
                 <span>Login</span>
               </Link>
             )}
 
-            <button className="menu-btn">
-              <Menu size={24} />
+            <button className="menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle mobile menu">
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </header>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="mobile-nav-backdrop" onClick={closeMobileMenu}>
+          <nav className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-links">
+              <Link to="/" className={`mobile-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMobileMenu}>Home</Link>
+              <Link to="/news" className={`mobile-nav-link ${location.pathname.startsWith('/news') ? 'active' : ''}`} onClick={closeMobileMenu}>News</Link>
+
+              <button className={`mobile-nav-link mobile-nav-expandable ${location.pathname.startsWith('/all-videos/') ? 'active' : ''}`} onClick={() => setMobileAllVideosOpen(!mobileAllVideosOpen)}>
+                All Videos <ChevronDown size={16} className={`dropdown-chevron ${mobileAllVideosOpen ? 'open' : ''}`} />
+              </button>
+
+              {mobileAllVideosOpen && (
+                <div className="mobile-subnav">
+                  <Link to="/all-videos/tvshows" className="mobile-subnav-link" onClick={closeMobileMenu}>TV Shows</Link>
+                  <Link to="/all-videos/movies" className="mobile-subnav-link" onClick={closeMobileMenu}>Movies</Link>
+                  <Link to="/all-videos/videos" className="mobile-subnav-link" onClick={closeMobileMenu}>Videos</Link>
+                  <Link to="/all-videos/news-videos" className="mobile-subnav-link" onClick={closeMobileMenu}>News Videos</Link>
+                  <Link to="/all-videos/documentary-films" className="mobile-subnav-link" onClick={closeMobileMenu}>Documentary Films</Link>
+                  <Link to="/all-videos/documentary-series" className="mobile-subnav-link" onClick={closeMobileMenu}>Documentary Series</Link>
+                  <Link to="/all-videos/science-fiction" className="mobile-subnav-link" onClick={closeMobileMenu}>Science-Fiction</Link>
+                </div>
+              )}
+
+              <Link to="/plans" className={`mobile-nav-link ${location.pathname === '/plans' ? 'active' : ''}`} onClick={closeMobileMenu}>Plans & Advertise</Link>
+              <Link to="/search" className={`mobile-nav-link ${location.pathname === '/search' ? 'active' : ''}`} onClick={closeMobileMenu}>Search</Link>
+            </div>
+
+            <div className="mobile-nav-divider"></div>
+
+            <div className="mobile-nav-auth">
+              {currentUser ? (
+                <>
+                  <div className="mobile-nav-user-info">
+                    <div className="mobile-nav-avatar">
+                      {(currentUser.username || 'U').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <span className="mobile-nav-username">{currentUser.username || 'User'}</span>
+                      <span className="mobile-nav-email">{currentUser.email}</span>
+                    </div>
+                  </div>
+                  <Link to="/profile" className="mobile-nav-link" onClick={closeMobileMenu}>
+                    <User size={18} /> My Profile
+                  </Link>
+                  <button className="mobile-nav-link mobile-nav-logout" onClick={handleLogoutRequest}>
+                    <LogOut size={18} /> Log Out
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="mobile-nav-login-btn" onClick={closeMobileMenu}>
+                  <User size={18} /> Login / Sign Up
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
 
       {/* Logout Confirmation Dialog */}
       {showLogoutConfirm && (

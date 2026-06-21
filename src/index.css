@@ -255,3 +255,40 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
+
+/* ── Skeleton Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .skeleton-hero {
+    height: auto;
+    min-height: 250px;
+    padding: 0 1.5rem;
+    padding-top: 70px;
+  }
+
+  .skeleton-hero-content {
+    margin-top: 2rem;
+  }
+
+  .skeleton-title {
+    height: 2.5rem;
+  }
+
+  .skeleton-desc {
+    height: 2.5rem;
+  }
+
+  .skeleton-btn {
+    width: 100px;
+    height: 36px;
+  }
+
+  .skeleton-card {
+    min-width: 160px;
+    width: 160px;
+    height: 180px;
+  }
+
+  .skeleton-card-img {
+    height: 96px;
+  }
+}
