@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../itv-backend"
+		},
+		{
+			"path": "../itv-cms"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

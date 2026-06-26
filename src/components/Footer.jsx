@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ApiService } from '../api';
 import './Footer.css';
 
 export default function Footer({ forceShow }) {
+  const [footerInfo, setFooterInfo] = useState({
+    description: 'Interplanetary Television (iTV) is your premier portal for streaming TV shows, movies, news, and documentaries about space exploration, science, technology, and science fiction.',
+    copyright: '© 2026 Interplanetary.tv | All Rights Reserved. Owned and operated by Frederic Eger, CEO.'
+  });
+
+  useEffect(() => {
+    const fetchFooter = async () => {
+      try {
+        const page = await ApiService.getPage('footer');
+        if (page && page.content) {
+          setFooterInfo({
+            description: page.content.description || footerInfo.description,
+            copyright: page.content.copyright || footerInfo.copyright
+          });
+        }
+      } catch (err) {
+        console.warn('Could not fetch footer settings:', err);
+      }
+    };
+    fetchFooter();
+  }, []);
   const location = useLocation();
 
   // Do not render footer on player screen or globally on home screen
@@ -19,7 +41,7 @@ export default function Footer({ forceShow }) {
             <img src="/ITV-Logo-copy.gif" alt="Interplanetary TV" className="footer-logo" />
           </Link>
           <p className="footer-description">
-            Interplanetary Television (iTV) is your premier portal for streaming TV shows, movies, news, and documentaries about space exploration, science, technology, and science fiction.
+            {footerInfo.description}
           </p>
           <div className="footer-social-links">
             <a href="https://www.instagram.com/interplanetarytv/" target="_blank" rel="noopener noreferrer" title="Instagram">
@@ -75,7 +97,7 @@ export default function Footer({ forceShow }) {
       </div>
 
       <div className="footer-bottom">
-        <p>© 2026 Interplanetary.tv | All Rights Reserved. Owned and operated by Frederic Eger, CEO.</p>
+        <p>{footerInfo.copyright}</p>
       </div>
     </footer>
   );

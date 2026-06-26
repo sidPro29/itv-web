@@ -21,6 +21,11 @@ export default function Profile() {
 
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState('');
+  const [contactInfo, setContactInfo] = useState({
+    email: 'info@interplanetary.tv',
+    phone: '+37123112488',
+    subtitle: "We're here to help! Reach out via email or phone anytime."
+  });
 
   // Tab control state (Default is Playlist/Continue Watching)
   const [activeTab, setActiveTab] = useState('Playlist');
@@ -96,6 +101,20 @@ export default function Profile() {
       const likedIds = JSON.parse(localStorage.getItem('likedVideos') || '[]');
       const matchingLiked = combined.filter(item => likedIds.includes(item._id));
       setLikedVideos(matchingLiked);
+
+      // Fetch contact details
+      try {
+        const contactPage = await ApiService.getPage('contact');
+        if (contactPage && contactPage.content) {
+          setContactInfo({
+            email: contactPage.content.email || 'info@interplanetary.tv',
+            phone: contactPage.content.phone || '+37123112488',
+            subtitle: contactPage.content.subtitle || "We're here to help! Reach out via email or phone anytime."
+          });
+        }
+      } catch (e) {
+        console.warn('Could not fetch contact info:', e);
+      }
 
     } catch (err) {
       console.error('Failed to load profile details:', err);
@@ -518,7 +537,7 @@ Thank you for choosing Interplanetary TV!
               <div className="tab-pane">
                 <h3 className="tab-pane-title contact-title">Contact Us</h3>
                 <p className="contact-subtitle">
-                  We're here to help! Reach out via email or phone anytime.
+                  {contactInfo.subtitle}
                 </p>
                 <ScrollableRow>
                   <div className="contact-method-card">
@@ -529,8 +548,8 @@ Thank you for choosing Interplanetary TV!
                     </div>
                     <div className="contact-card-info">
                       <h4>Email Us</h4>
-                      <a href="mailto:info@interplanetary.tv" className="contact-link email-link">
-                        info@interplanetary.tv
+                      <a href={`mailto:${contactInfo.email}`} className="contact-link email-link">
+                        {contactInfo.email}
                       </a>
                     </div>
                   </div>
@@ -543,8 +562,8 @@ Thank you for choosing Interplanetary TV!
                     </div>
                     <div className="contact-card-info">
                       <h4>Call Us</h4>
-                      <a href="tel:+37123112488" className="contact-link phone-link">
-                        +37123112488
+                      <a href={`tel:${contactInfo.phone}`} className="contact-link phone-link">
+                        {contactInfo.phone}
                       </a>
                     </div>
                   </div>

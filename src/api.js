@@ -124,6 +124,10 @@ export const ApiService = {
     return this.fetchJson('/plans');
   },
 
+  async getPage(key) {
+    return this.fetchJson(`/pages/${key}`);
+  },
+
   async purchasePlan(planId, stripeTokenId) {
     this.clearCache(); // Invalidate cache so fresh access info is fetched
     return this.fetchJson('/plans/purchase', {
