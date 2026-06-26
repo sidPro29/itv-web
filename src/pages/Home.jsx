@@ -80,9 +80,11 @@ export default function Home() {
       setLoading(true);
       setError(null);
       
-      const vids = await ApiService.getVideos();
-      const movs = await ApiService.getMovies();
-      const shows = await ApiService.getTVShows();
+      const [vids, movs, shows] = await Promise.all([
+        ApiService.getVideos(),
+        ApiService.getMovies(),
+        ApiService.getTVShows()
+      ]);
       
       // Combine all content for local storage lookups
       const combined = [...(vids || []), ...(movs || []), ...(shows || [])];
