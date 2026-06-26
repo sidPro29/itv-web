@@ -61,10 +61,12 @@ export default function VideoGrid() {
     async function loadCategoryContent() {
       try {
         setLoading(true);
-        const vids = await ApiService.getVideos().catch(() => []);
-        const movs = await ApiService.getMovies().catch(() => []);
-        const shows = await ApiService.getTVShows().catch(() => []);
-        const eps = await ApiService.getEpisodes().catch(() => []);
+        const [vids, movs, shows, eps] = await Promise.all([
+          ApiService.getVideos().catch(() => []),
+          ApiService.getMovies().catch(() => []),
+          ApiService.getTVShows().catch(() => []),
+          ApiService.getEpisodes().catch(() => [])
+        ]);
         const combined = [...vids, ...movs, ...shows];
 
         // Apply specific filter
