@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ApiService } from '../api';
+import ApksModal from './ApksModal';
 import './Footer.css';
 
 export default function Footer({ forceShow }) {
+  const [showApksModal, setShowApksModal] = useState(false);
   const [footerInfo, setFooterInfo] = useState({
     description: 'Interplanetary Television (iTV) is your premier portal for streaming TV shows, movies, news, and documentaries about space exploration, science, technology, and science fiction.',
     copyright: '© 2026 Interplanetary.tv | All Rights Reserved. Owned and operated by Frederic Eger, CEO.'
@@ -89,6 +91,15 @@ export default function Footer({ forceShow }) {
             >
               Cookie Preferences
             </button>
+            <button 
+              className="footer-cookie-btn" 
+              onClick={() => setShowApksModal(true)}
+              style={{ background: 'none', border: 'none', color: '#8c8f9c', padding: 0, font: 'inherit', cursor: 'pointer', textAlign: 'left', transition: 'color 0.2s' }}
+              onMouseEnter={(e) => e.target.style.color = '#fff'}
+              onMouseLeave={(e) => e.target.style.color = '#8c8f9c'}
+            >
+              Download APKs
+            </button>
             <Link to="/faq">FAQ</Link>
             <Link to="/profile">My Profile</Link>
           </div>
@@ -99,6 +110,8 @@ export default function Footer({ forceShow }) {
       <div className="footer-bottom">
         <p>{footerInfo.copyright}</p>
       </div>
+
+      {showApksModal && <ApksModal onClose={() => setShowApksModal(false)} />}
     </footer>
   );
 }

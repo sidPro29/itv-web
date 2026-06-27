@@ -8,7 +8,18 @@
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "../itv-androidMob"
+		},
+		{
+			"path": "../itv-androidTv"
+		},
+		{
+			"path": "../itv-lg"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "itv-lg"
+	}
 }
