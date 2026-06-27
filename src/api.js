@@ -134,5 +134,9 @@ export const ApiService = {
       method: 'POST',
       body: JSON.stringify({ planId, stripeTokenId })
     });
+  },
+
+  async getApks() {
+    return this.fetchJson('/apks');
   }
 };

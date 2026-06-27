@@ -10,8 +10,8 @@ export default function ApksModal({ onClose }) {
   useEffect(() => {
     const fetchApks = async () => {
       try {
-        const res = await ApiService.client.get('/apks');
-        setApks(res.data.data || []);
+        const res = await ApiService.getApks();
+        setApks(res.data || []);
       } catch (err) {
         console.error('Failed to fetch APKs:', err);
         setError('Could not load available APKs at this time.');
