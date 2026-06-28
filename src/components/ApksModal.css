@@ -96,9 +96,11 @@
 }
 
 .apk-image {
-  width: 60px;
+  width: 110px;
   height: 60px;
-  object-fit: cover;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px;
   border-radius: 10px;
   margin-right: 20px;
   flex-shrink: 0;
@@ -140,8 +142,8 @@
   .apk-image {
     margin-right: 0;
     margin-bottom: 15px;
-    width: 80px;
-    height: 80px;
+    width: 110px;
+    height: 60px;
   }
   
   .apk-download-btn {
