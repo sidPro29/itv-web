@@ -22,7 +22,21 @@ export default function ApksModal({ onClose }) {
     fetchApks();
   }, []);
 
-  const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'https://api.interplanetary.tv';
+  const getAbsoluteUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl && apiUrl.startsWith('http')) {
+      try {
+        const origin = new URL(apiUrl).origin;
+        return `${origin}${url}`;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return `${window.location.origin}${url}`;
+  };
 
   return (
     <div className="apks-modal-overlay" onClick={onClose}>
@@ -41,11 +55,11 @@ export default function ApksModal({ onClose }) {
           <div className="apks-list">
             {apks.map(apk => (
               <div key={apk._id} className="apk-item">
-                <img src={`${baseUrl}${apk.imageUrl}`} alt={apk.title} className="apk-image" />
+                <img src={getAbsoluteUrl(apk.imageUrl)} alt={apk.title} className="apk-image" />
                 <div className="apk-details">
                   <h3>{apk.title}</h3>
                 </div>
-                <a href={`${baseUrl}${apk.apkUrl}`} download className="apk-download-btn">
+                <a href={getAbsoluteUrl(apk.apkUrl)} download className="apk-download-btn">
                   Download
                 </a>
               </div>
