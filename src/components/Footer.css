@@ -167,11 +167,15 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 6px;
 }
 
 .footer-apk-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
   transition: transform 0.2s ease;
   border-radius: 6px;
   overflow: hidden;
@@ -194,6 +198,19 @@
 
 .footer-apk-link:hover .footer-apk-image {
   filter: brightness(1.2);
+}
+
+.footer-apk-title {
+  font-size: 0.65rem;
+  color: #8c8f9c;
+  font-weight: 500;
+  text-align: center;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.footer-apk-link:hover .footer-apk-title {
+  color: #fff;
 }
 
 @media (max-width: 480px) {

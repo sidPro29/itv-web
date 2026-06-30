@@ -94,6 +94,7 @@ export default function Footer({ forceShow }) {
                 {apks.map(apk => (
                   <a key={apk._id} href={getAbsoluteUrl(apk.apkUrl)} className="footer-apk-link" title={`Download ${apk.title}`} download>
                     <img src={getAbsoluteUrl(apk.imageUrl)} alt={apk.title} className="footer-apk-image" />
+                    <span className="footer-apk-title">{apk.title}</span>
                   </a>
                 ))}
               </div>
