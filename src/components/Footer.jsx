@@ -88,12 +88,15 @@ export default function Footer({ forceShow }) {
             </a>
           </div>
           {apks && apks.length > 0 && (
-            <div className="footer-apk-downloads">
-              {apks.map(apk => (
-                <a key={apk._id} href={getAbsoluteUrl(apk.apkUrl)} className="footer-apk-link" title={`Download ${apk.title}`} download>
-                  <img src={getAbsoluteUrl(apk.imageUrl)} alt={apk.title} className="footer-apk-image" />
-                </a>
-              ))}
+            <div className="footer-apps-section">
+              <span className="footer-apps-label">Download our Apps</span>
+              <div className="footer-apk-downloads">
+                {apks.map(apk => (
+                  <a key={apk._id} href={getAbsoluteUrl(apk.apkUrl)} className="footer-apk-link" title={`Download ${apk.title}`} download>
+                    <img src={getAbsoluteUrl(apk.imageUrl)} alt={apk.title} className="footer-apk-image" />
+                  </a>
+                ))}
+              </div>
             </div>
           )}
         </div>
