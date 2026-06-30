@@ -148,6 +148,34 @@
   box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
 }
 
+.footer-apk-downloads {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.footer-apk-link {
+  display: block;
+  width: 150px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-apk-link:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.footer-apk-image {
+  width: 150px;
+  height: 40px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  border-radius: 8px;
+}
+
 @media (max-width: 480px) {
   .footer-glass {
     padding: 2rem 1rem 1.25rem;

@@ -6,6 +6,7 @@ import './Footer.css';
 
 export default function Footer({ forceShow }) {
   const [showApksModal, setShowApksModal] = useState(false);
+  const [apks, setApks] = useState([]);
   const [footerInfo, setFooterInfo] = useState({
     description: 'Interplanetary Television (iTV) is your premier portal for streaming TV shows, movies, news, and documentaries about space exploration, science, technology, and science fiction.',
     copyright: '© 2026 Interplanetary.tv | All Rights Reserved. Owned and operated by Frederic Eger, CEO.'
@@ -26,7 +27,34 @@ export default function Footer({ forceShow }) {
       }
     };
     fetchFooter();
+
+    const fetchApks = async () => {
+      try {
+        const res = await ApiService.getApks();
+        setApks(res.data || []);
+      } catch (err) {
+        console.warn('Could not fetch APKs for footer:', err);
+      }
+    };
+    fetchApks();
   }, []);
+
+  const getAbsoluteUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl && apiUrl.startsWith('http')) {
+      try {
+        const origin = new URL(apiUrl).origin;
+        return `${origin}${url}`;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return `${window.location.origin}${url}`;
+  };
+
   const location = useLocation();
 
   // Do not render footer on player screen or globally on home screen
@@ -59,6 +87,15 @@ export default function Footer({ forceShow }) {
               <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
             </a>
           </div>
+          {apks && apks.length > 0 && (
+            <div className="footer-apk-downloads">
+              {apks.map(apk => (
+                <a key={apk._id} href={getAbsoluteUrl(apk.apkUrl)} className="footer-apk-link" title={`Download ${apk.title}`} download>
+                  <img src={getAbsoluteUrl(apk.imageUrl)} alt={apk.title} className="footer-apk-image" />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="footer-links-grid">
