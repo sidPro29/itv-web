@@ -185,16 +185,15 @@
   width: 120px;
   height: 32px;
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 2px 6px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  transition: filter 0.2s ease;
 }
 
 .footer-apk-link:hover .footer-apk-image {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.2);
+  filter: brightness(1.2);
 }
 
 @media (max-width: 480px) {
