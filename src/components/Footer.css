@@ -201,9 +201,9 @@
 }
 
 .footer-apk-title {
-  font-size: 0.65rem;
+  font-size: 0.78rem;
   color: #8c8f9c;
-  font-weight: 500;
+  font-weight: bold;
   text-align: center;
   transition: color 0.2s ease;
   white-space: nowrap;
