@@ -6,8 +6,8 @@ import { ShieldCheck, Info, Loader2, CreditCard, X } from 'lucide-react';
 import './Plans.css';
 
 const STRIPE_KEYS = {
-  TEST_KEY: 'pk_test_51T6DloKIOfsbn4UWmZy7H5PjxqgVtuyAerT2s84NupJ02BkhJP9AQjZeV1jOVmFdz3nAix97p5K51eDqU8C5x8YK00g2YxYqbs',
-  LIVE_KEY: 'pk_live_51QX8CgG2MEip9MtAIotH2lmhenLiLRrBS9dHOq3rHbHdPJJRp7QREodH3zoO0h1EepziTDPspfzEWHfA1wB3YcXw00hAykOLik'
+  TEST_KEY: 'pk_test_51QXMnwGoExYliEVvZWtX57kEp0pympGoygrsomujWz3e0QQspmRqO0cEzdejsGX4iGTlNbcRc6NFmvv60sIII6wh00pDj3Tvms',
+  LIVE_KEY: 'pk_live_51QXMnwGoExYliEVvUJ0Bej64womLcFqX4wS2abP0YHHCQwAdMAgFEAv1Tvxlk9Jrzx3kJ1gtNnS4BEjwb19Zo2oS00j60jbUuj'
 };
 
 export default function Plans() {
