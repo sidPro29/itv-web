@@ -17,6 +17,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import Faq from './pages/Faq';
 import CookieConsent from './components/CookieConsent';
+import CommunityFloatingButton from './components/CommunityFloatingButton';
 import './index.css';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           </main>
           <Footer />
           <CookieConsent />
+          <CommunityFloatingButton />
         </div>
       </BrowserRouter>
     </AuthProvider>
