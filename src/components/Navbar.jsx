@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Play, Menu, X, LogOut, ChevronDown } from 'lucide-react';
+import { Search, User, Play, Menu, X, LogOut, ChevronDown, Users, Sparkles, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
+import './CommunityFloatingButton.css';
 
 export default function Navbar() {
   const { currentUser, logout } = useAuth();
@@ -15,6 +16,22 @@ export default function Navbar() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileAllVideosOpen, setMobileAllVideosOpen] = useState(false);
+  const [showCommunityModal, setShowCommunityModal] = useState(false);
+
+  const hasActiveSubscription = () => {
+    if (!currentUser || !currentUser.activePlans || !Array.isArray(currentUser.activePlans)) return false;
+    const now = new Date();
+    return currentUser.activePlans.some(plan => !plan.expiryDate || new Date(plan.expiryDate) > now);
+  };
+
+  const handleCommunityClick = () => {
+    if (hasActiveSubscription()) {
+      const communityUrl = import.meta.env.VITE_COMMUNITY_URL || 'https://community.interplanetary.tv';
+      window.location.href = communityUrl;
+    } else {
+      setShowCommunityModal(true);
+    }
+  };
 
   // Listen to window scroll to change header opacity
   useEffect(() => {
@@ -119,6 +136,12 @@ export default function Navbar() {
               )}
             </div>
 
+            <button className="nav-community-btn" onClick={handleCommunityClick} title="Explore ITV Space Community">
+              <Users size={16} />
+              <span>Space Community</span>
+              <Sparkles size={14} style={{ color: '#ffd700' }} />
+            </button>
+
             <Link to="/plans" className={`nav-link ${location.pathname === '/plans' ? 'active' : ''}`}>Plans & Advertise</Link>
           </nav>
 
@@ -181,6 +204,14 @@ export default function Navbar() {
         <div className="mobile-nav-backdrop" onClick={closeMobileMenu}>
           <nav className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-nav-links">
+              <button className="mobile-nav-community-btn" onClick={() => { closeMobileMenu(); handleCommunityClick(); }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Users size={18} />
+                  <span>Space Community</span>
+                </div>
+                <Sparkles size={16} style={{ color: '#ffd700' }} />
+              </button>
+
               <Link to="/" className={`mobile-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMobileMenu}>Home</Link>
               <Link to="/news" className={`mobile-nav-link ${location.pathname.startsWith('/news') ? 'active' : ''}`} onClick={closeMobileMenu}>News</Link>
 
@@ -232,6 +263,30 @@ export default function Navbar() {
               )}
             </div>
           </nav>
+        </div>
+      )}
+
+      {/* Subscription Required Modal */}
+      {showCommunityModal && (
+        <div className="community-modal-overlay" onClick={() => setShowCommunityModal(false)}>
+          <div className="community-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="community-modal-badge">
+              <Lock size={32} />
+            </div>
+            <h3 className="community-modal-title">Subscription Required</h3>
+            <p className="community-modal-desc">
+              Exclusive access to the <strong>ITV Space Community</strong> platform is reserved for active Interplanetary subscribers. Connect with top space enthusiasts, professionals, and entrepreneurs.
+            </p>
+
+            <div className="community-modal-actions">
+              <button className="btn-modal-plans" onClick={() => { setShowCommunityModal(false); navigate('/plans'); }}>
+                View Subscription Plans <ArrowRight size={16} style={{ display: 'inline', marginLeft: 4 }} />
+              </button>
+              <button className="btn-modal-cancel" onClick={() => setShowCommunityModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
