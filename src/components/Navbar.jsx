@@ -27,7 +27,7 @@ export default function Navbar() {
   const handleCommunityClick = () => {
     if (hasActiveSubscription()) {
       const communityUrl = import.meta.env.VITE_COMMUNITY_URL || 'https://community.interplanetary.tv';
-      window.location.href = communityUrl;
+      window.open(communityUrl, '_blank', 'noopener,noreferrer');
     } else {
       setShowCommunityModal(true);
     }

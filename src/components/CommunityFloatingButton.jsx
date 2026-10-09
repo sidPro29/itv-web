@@ -17,9 +17,9 @@ export default function CommunityFloatingButton() {
 
   const handleClick = () => {
     if (hasActiveSubscription()) {
-      // Redirect to Community Platform (localhost:5174 in dev or production URL)
-      const communityUrl = import.meta.env.VITE_COMMUNITY_URL || 'http://localhost:5174';
-      window.location.href = communityUrl;
+      // Redirect to Community Platform in a new tab
+      const communityUrl = import.meta.env.VITE_COMMUNITY_URL || 'https://community.interplanetary.tv';
+      window.open(communityUrl, '_blank', 'noopener,noreferrer');
     } else {
       setShowModal(true);
     }
