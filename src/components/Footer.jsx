@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Headphones } from 'lucide-react';
 import { ApiService } from '../api';
 import ApksModal from './ApksModal';
 import './Footer.css';
@@ -121,6 +122,31 @@ export default function Footer({ forceShow }) {
 
           <div className="footer-column">
             <h4>Legal & Support</h4>
+            <button 
+              className="footer-support-btn" 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-support-chat'))}
+              style={{
+                background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.15), rgba(0, 198, 255, 0.25))',
+                border: '1px solid rgba(0, 198, 255, 0.4)',
+                color: '#00f2fe',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                font: 'inherit',
+                fontSize: '0.85rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                textAlign: 'left',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '10px',
+                transition: 'all 0.2s',
+                boxShadow: '0 2px 10px rgba(0, 198, 255, 0.2)'
+              }}
+            >
+              <Headphones size={15} />
+              <span>Live Support Chat</span>
+            </button>
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-of-use">Terms of Use</Link>
             <button 
