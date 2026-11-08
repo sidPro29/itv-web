@@ -101,35 +101,69 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 900px;
+  max-width: 960px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .plan-card-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(20, 20, 20, 0.45);
+  flex-direction: column;
+  background: rgba(18, 22, 36, 0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 16px;
-  padding: 1.75rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 1.75rem 2rem;
   transition: var(--transition-smooth);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 .plan-card-row:hover {
-  background: rgba(30, 30, 30, 0.55);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(24, 30, 48, 0.85);
+  border-color: rgba(0, 198, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 122, 255, 0.15);
 }
 
 .plan-card-row.active-border {
-  border-color: #007aff;
-  background: rgba(0, 122, 255, 0.03);
+  border-color: #00c6ff;
+  background: rgba(0, 122, 255, 0.08);
+  box-shadow: 0 0 25px rgba(0, 198, 255, 0.2);
+}
+
+.plan-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.plan-badge-wrapper {
+  margin-bottom: 6px;
+}
+
+.plan-type-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.plan-type-badge.ads-badge {
+  background: rgba(255, 170, 0, 0.15);
+  color: #ffb822;
+  border: 1px solid rgba(255, 170, 0, 0.35);
+}
+
+.plan-type-badge.regular-badge {
+  background: rgba(0, 242, 254, 0.12);
+  color: #00f2fe;
+  border: 1px solid rgba(0, 242, 254, 0.3);
 }
 
 .plan-card-info-side {
@@ -140,19 +174,20 @@
 .plan-name {
   font-size: 1.35rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   color: #ffffff;
+  line-height: 1.3;
 }
 
 .plan-tax-note {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .plan-card-price-side {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  gap: 2rem;
 }
 
 .plan-price-block {
@@ -164,21 +199,145 @@
 .price-symbol {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #007aff;
+  color: #00c6ff;
   margin-right: 2px;
 }
 
 .price-value {
-  font-size: 2.6rem;
+  font-size: 2.5rem;
   font-weight: 800;
   color: #ffffff;
   line-height: 1;
 }
 
 .price-cycle {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   margin-left: 6px;
+}
+
+/* Plan Divider */
+.plan-card-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 198, 255, 0.2) 50%, rgba(255, 255, 255, 0.05) 100%);
+  margin: 1.25rem 0 1rem 0;
+  width: 100%;
+}
+
+/* Plan Benefits Container */
+.plan-benefits-container {
+  width: 100%;
+}
+
+.plan-benefits-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #00c6ff;
+  margin-bottom: 0.75rem;
+}
+
+.benefits-sparkle-icon {
+  color: #ffd700;
+}
+
+.plan-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.plan-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+.benefit-check-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 198, 255, 0.18);
+  color: #00f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border: 1px solid rgba(0, 198, 255, 0.4);
+}
+
+.benefit-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+.btn-toggle-benefits {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 198, 255, 0.25);
+  border-radius: 20px;
+  color: #38bdf8;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 6px 14px;
+  margin-top: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-benefits:hover {
+  background: rgba(0, 198, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(0, 198, 255, 0.5);
+}
+
+/* Modal Benefits Preview */
+.modal-benefits-preview {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 1.5rem;
+}
+
+.modal-preview-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #00c6ff;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.modal-preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-preview-list li {
+  font-size: 0.84rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
 }
 
 .plan-buy-btn {
@@ -375,10 +534,13 @@
   }
 
   .plan-card-row {
+    padding: 1.25rem;
+  }
+
+  .plan-card-top {
     flex-direction: column;
     align-items: flex-start;
     gap: 1.25rem;
-    padding: 1.25rem;
   }
 
   .plan-card-info-side {

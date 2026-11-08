@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ApiService } from '../api';
-import { ShieldCheck, Info, Loader2, CreditCard, X } from 'lucide-react';
+import { ShieldCheck, Info, Loader2, CreditCard, X, Check, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import './Plans.css';
 
 const STRIPE_KEYS = {
@@ -18,6 +18,66 @@ export default function Plans() {
   const [selectedCycle, setSelectedCycle] = useState('Monthly');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [expandedPlans, setExpandedPlans] = useState({});
+
+  const toggleExpand = (planId) => {
+    setExpandedPlans(prev => ({
+      ...prev,
+      [planId]: !prev[planId]
+    }));
+  };
+
+  const getPlanBenefits = (plan) => {
+    if (!plan) return [];
+    if (plan.benefits && plan.benefits.length > 0) {
+      return plan.benefits;
+    }
+    const name = (plan.name || '').toLowerCase();
+    if (name.includes('4k')) {
+      return [
+        'Ultra HD 4K streaming resolution on all supported devices',
+        'Watch full catalogue of shows, films, and space documentaries with no ad interruptions',
+        'Multi-screen streaming access (TV, mobile, tablet, and desktop)',
+        'Full access to the ITV Space Community Platform'
+      ];
+    }
+    if (name.includes('premium')) {
+      return [
+        'Full HD (1080p) streaming resolution',
+        'Stream all premium series, films, and news ad-free',
+        'Multi-device streaming support',
+        'Full access to the ITV Space Community Platform'
+      ];
+    }
+    if (name.includes('standard')) {
+      return [
+        'Full HD (1080p) streaming access',
+        'Watch trailers and selected shows with no ad interruptions',
+        'Full catalogue browsing and instant news alerts'
+      ];
+    }
+    if (name.includes('basic') || name.includes('avod')) {
+      return [
+        'Standard Definition (SD 576p) streaming',
+        'Watch on 1 device',
+        'Access to trailers and selected catalogue shows',
+        'Customer support via email'
+      ];
+    }
+    if (plan.type === 'adsPlan') {
+      return [
+        'Video commercial runs during daily broadcasts',
+        'Press release published on ITV news page and all social media channels',
+        'Media coordination and digital marketing campaigns',
+        'Customer support via email'
+      ];
+    }
+    return [
+      'Unlimited streaming access to ITV catalogue',
+      'High quality video playback',
+      'Customer support'
+    ];
+  };
 
   // Payment Modal States
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -218,29 +278,79 @@ export default function Plans() {
       <div className="plans-list-wrapper animate-fade-in" style={{ animationDelay: '0.1s' }}>
         {filteredPlans.map((plan) => {
           const isActive = activeUserPlan?.planId === plan._id;
+          const benefits = getPlanBenefits(plan);
+          const isExpanded = !!expandedPlans[plan._id];
+          const isAds = plan.type === 'adsPlan';
+          const visibleBenefits = isExpanded ? benefits : benefits.slice(0, 3);
           
           return (
             <div key={plan._id} className={`plan-card-row ${isActive ? 'active-border' : ''}`}>
-              <div className="plan-card-info-side">
-                <h3 className="plan-name">{plan.name}</h3>
-                <p className="plan-tax-note">Customers in IT will be charged 20% tax.</p>
+              <div className="plan-card-top">
+                <div className="plan-card-info-side">
+                  <div className="plan-badge-wrapper">
+                    {isAds ? (
+                      <span className="plan-type-badge ads-badge">Commercial Advertising</span>
+                    ) : (
+                      <span className="plan-type-badge regular-badge">Streaming Membership</span>
+                    )}
+                  </div>
+                  <h3 className="plan-name">{plan.name}</h3>
+                  <p className="plan-tax-note">Customers in IT will be charged 20% tax.</p>
+                </div>
+
+                <div className="plan-card-price-side">
+                  <div className="plan-price-block">
+                    <span className="price-symbol">€</span>
+                    <span className="price-value">{plan.amount}</span>
+                    <span className="price-cycle">/ {plan.billingCycle === 'Yearly' ? 'Year' : 'Month'}</span>
+                  </div>
+                  
+                  <button 
+                    className={`plan-buy-btn ${isActive ? 'btn-active' : 'btn-select'}`}
+                    onClick={() => handleSelectPlan(plan)}
+                    disabled={isActive}
+                  >
+                    {isActive ? 'Active' : 'Select'}
+                  </button>
+                </div>
               </div>
 
-              <div className="plan-card-price-side">
-                <div className="plan-price-block">
-                  <span className="price-symbol">€</span>
-                  <span className="price-value">{plan.amount}</span>
-                  <span className="price-cycle">/ {plan.billingCycle === 'Yearly' ? 'Year' : 'Month'}</span>
+              {/* Plan Benefits & Info */}
+              {benefits && benefits.length > 0 && (
+                <div className="plan-benefits-container">
+                  <div className="plan-card-divider"></div>
+                  
+                  <div className="plan-benefits-header">
+                    <Sparkles size={14} className="benefits-sparkle-icon" />
+                    <span>Included in this plan:</span>
+                  </div>
+
+                  <ul className="plan-benefits-list">
+                    {visibleBenefits.map((benefitText, idx) => (
+                      <li key={idx} className="plan-benefit-item">
+                        <span className="benefit-check-circle">
+                          <Check size={11} strokeWidth={3} />
+                        </span>
+                        <span className="benefit-text">{benefitText}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {benefits.length > 3 && (
+                    <button 
+                      type="button"
+                      className="btn-toggle-benefits"
+                      onClick={() => toggleExpand(plan._id)}
+                    >
+                      {isExpanded ? (
+                        <>Show fewer features <ChevronUp size={14} /></>
+                      ) : (
+                        <>View all {benefits.length} features & terms <ChevronDown size={14} /></>
+                      )}
+                    </button>
+                  )}
                 </div>
-                
-                <button 
-                  className={`plan-buy-btn ${isActive ? 'btn-active' : 'btn-select'}`}
-                  onClick={() => handleSelectPlan(plan)}
-                  disabled={isActive}
-                >
-                  {isActive ? 'Active' : 'Select'}
-                </button>
-              </div>
+              )}
             </div>
           );
         })}
@@ -260,6 +370,19 @@ export default function Plans() {
             <p className="modal-price-label">
               Price: €{selectedPlan.amount} / {selectedPlan.billingCycle}
             </p>
+
+            {/* Modal Mini Benefits */}
+            <div className="modal-benefits-preview">
+              <span className="modal-preview-title">Highlights:</span>
+              <ul className="modal-preview-list">
+                {getPlanBenefits(selectedPlan).slice(0, 3).map((b, i) => (
+                  <li key={i}>
+                    <Check size={12} color="#00c6ff" style={{ display: 'inline', marginRight: 6 }} />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             <form onSubmit={handlePaymentSubmit} className="payment-form">
               <div className="stripe-input-wrapper">
