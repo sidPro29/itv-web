@@ -136,26 +136,13 @@ export default function Navbar() {
               )}
             </div>
 
-            <button className="nav-community-btn" onClick={handleCommunityClick} title="Explore ITV Space Community">
-              <Users size={16} />
-              <span>Space Community</span>
-              <Sparkles size={14} style={{ color: '#ffd700' }} />
-            </button>
-
             <Link to="/plans" className={`nav-link ${location.pathname === '/plans' ? 'active' : ''}`}>Plans & Advertise</Link>
           </nav>
 
-          <div className="navbar-actions">
-            <button 
-              className="nav-header-support-btn" 
-              onClick={() => window.dispatchEvent(new CustomEvent('open-support-chat'))} 
-              title="Live Support Chat"
-            >
-              <Headphones size={15} />
-              <span>Support</span>
-            </button>
+          <div className="navbar-spacer" style={{ flex: 1 }}></div>
 
-            <button className="action-btn" onClick={() => navigate('/search')}>
+          <div className="navbar-actions">
+            <button className="action-btn" onClick={() => navigate('/search')} title="Search">
               <Search size={20} />
             </button>
 
@@ -165,7 +152,7 @@ export default function Navbar() {
                   className="login-link"
                   onClick={() => setDropdownOpen((prev) => !prev)}
                 >
-                  <User size={16} />
+                  <User size={15} />
                   <span>Profile</span>
                   <ChevronDown size={14} className={`dropdown-chevron ${dropdownOpen ? 'open' : ''}`} />
                 </button>
@@ -183,12 +170,12 @@ export default function Navbar() {
                       className="dropdown-item"
                       onClick={() => setDropdownOpen(false)}
                     >
-                      <User size={16} />
+                      <User size={15} />
                       My Profile
                     </Link>
                     <div className="dropdown-divider"></div>
                     <button className="dropdown-item logout-btn" onClick={handleLogoutRequest}>
-                      <LogOut size={16} />
+                      <LogOut size={15} />
                       Log Out
                     </button>
                   </div>
@@ -196,10 +183,24 @@ export default function Navbar() {
               </div>
             ) : (
               <Link to="/login" className="login-link desktop-profile">
-                <User size={16} />
+                <User size={15} />
                 <span>Login</span>
               </Link>
             )}
+
+            <button 
+              className="nav-header-support-btn" 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-support-chat'))} 
+              title="Live Support Chat"
+            >
+              <Headphones size={15} />
+              <span>Support</span>
+            </button>
+
+            <button className="nav-community-btn" onClick={handleCommunityClick} title="Explore ITV Space Community">
+              <Users size={15} />
+              <span>Space Community</span>
+            </button>
 
             <button className="menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle mobile menu">
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -213,14 +214,6 @@ export default function Navbar() {
         <div className="mobile-nav-backdrop" onClick={closeMobileMenu}>
           <nav className="mobile-nav-drawer" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-nav-links">
-              <button className="mobile-nav-community-btn" onClick={() => { closeMobileMenu(); handleCommunityClick(); }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Users size={18} />
-                  <span>Space Community</span>
-                </div>
-                <Sparkles size={16} style={{ color: '#ffd700' }} />
-              </button>
-
               <Link to="/" className={`mobile-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMobileMenu}>Home</Link>
               <Link to="/news" className={`mobile-nav-link ${location.pathname.startsWith('/news') ? 'active' : ''}`} onClick={closeMobileMenu}>News</Link>
 
@@ -241,6 +234,8 @@ export default function Navbar() {
               )}
 
               <Link to="/plans" className={`mobile-nav-link ${location.pathname === '/plans' ? 'active' : ''}`} onClick={closeMobileMenu}>Plans & Advertise</Link>
+              <Link to="/search" className={`mobile-nav-link ${location.pathname === '/search' ? 'active' : ''}`} onClick={closeMobileMenu}>Search</Link>
+
               <button 
                 className="mobile-nav-link" 
                 onClick={() => { closeMobileMenu(); window.dispatchEvent(new CustomEvent('open-support-chat')); }}
@@ -249,7 +244,13 @@ export default function Navbar() {
                 <Headphones size={18} />
                 <span>Live Support</span>
               </button>
-              <Link to="/search" className={`mobile-nav-link ${location.pathname === '/search' ? 'active' : ''}`} onClick={closeMobileMenu}>Search</Link>
+
+              <button className="mobile-nav-community-btn" onClick={() => { closeMobileMenu(); handleCommunityClick(); }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Users size={18} />
+                  <span>Space Community</span>
+                </div>
+              </button>
             </div>
 
             <div className="mobile-nav-divider"></div>
