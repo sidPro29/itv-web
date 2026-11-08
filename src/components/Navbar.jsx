@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, User, Play, Menu, X, LogOut, ChevronDown, Users, Sparkles, Lock, ArrowRight } from 'lucide-react';
+import { Search, User, Play, Menu, X, LogOut, ChevronDown, Users, Sparkles, Lock, ArrowRight, Headphones } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 import './CommunityFloatingButton.css';
@@ -146,6 +146,15 @@ export default function Navbar() {
           </nav>
 
           <div className="navbar-actions">
+            <button 
+              className="nav-header-support-btn" 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-support-chat'))} 
+              title="Live Support Chat"
+            >
+              <Headphones size={15} />
+              <span>Support</span>
+            </button>
+
             <button className="action-btn" onClick={() => navigate('/search')}>
               <Search size={20} />
             </button>
@@ -232,6 +241,14 @@ export default function Navbar() {
               )}
 
               <Link to="/plans" className={`mobile-nav-link ${location.pathname === '/plans' ? 'active' : ''}`} onClick={closeMobileMenu}>Plans & Advertise</Link>
+              <button 
+                className="mobile-nav-link" 
+                onClick={() => { closeMobileMenu(); window.dispatchEvent(new CustomEvent('open-support-chat')); }}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00c6ff', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit', padding: '12px 16px' }}
+              >
+                <Headphones size={18} />
+                <span>Live Support</span>
+              </button>
               <Link to="/search" className={`mobile-nav-link ${location.pathname === '/search' ? 'active' : ''}`} onClick={closeMobileMenu}>Search</Link>
             </div>
 
